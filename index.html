@@ -26,7 +26,7 @@
             padding-right: 2rem;
         }
 
-        /* Efecto normal para botones principales */
+        /* Efecto normal para los demás botones */
         button:not(.tab-btn) {
             transition: all 0.2s ease;
         }
@@ -34,18 +34,13 @@
             transform: scale(1.05);
             box-shadow: 0 10px 15px -3px rgb(234 179 8 / 0.4);
         }
-
-        /* RESPONSIVE PARA CELULARES Y TABLETS */
-        .action-buttons { @apply flex flex-col sm:flex-row gap-4; }
-        .table-container { @apply overflow-x-auto; }
-        .stat-grid { @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6; }
     </style>
 </head>
 <body class="bg-zinc-950 text-white">
 
     <!-- LOGIN -->
     <div id="login-screen" class="min-h-screen flex items-center justify-center bg-zinc-900">
-        <div class="bg-zinc-800 p-8 sm:p-10 rounded-3xl shadow-2xl w-full max-w-md border border-zinc-700">
+        <div class="bg-zinc-800 p-10 rounded-3xl shadow-2xl w-full max-w-md border border-zinc-700">
             <div class="text-center mb-8">
                 <div class="mx-auto w-24 h-24 bg-yellow-500 rounded-2xl flex items-center justify-center shadow-inner">
                     <i class="fa-solid fa-car-side text-5xl text-zinc-900"></i>
@@ -79,7 +74,7 @@
     <!-- APP -->
     <div id="app-screen" class="hidden min-h-screen bg-zinc-950">
         <header class="bg-zinc-900 border-b border-zinc-800 sticky top-0 z-50">
-            <div class="max-w-screen-2xl mx-auto px-4 sm:px-8 py-5 flex items-center justify-between">
+            <div class="max-w-screen-2xl mx-auto px-8 py-5 flex items-center justify-between">
                 <div class="flex items-center gap-x-4">
                     <div class="w-10 h-10 bg-yellow-500 rounded-2xl flex items-center justify-center">
                         <i class="fa-solid fa-car-side text-2xl text-zinc-900"></i>
@@ -105,17 +100,16 @@
             </div>
         </header>
 
-        <div class="max-w-screen-2xl mx-auto px-4 sm:px-8 py-8">
-            <!-- PESTAÑAS -->
-            <div class="flex border-b border-zinc-700 mb-8 overflow-x-auto pb-1">
-                <button onclick="cambiarTab(0)" id="tab-btn-0" class="tab-btn active px-8 py-4 text-lg whitespace-nowrap">📦 Inventario</button>
-                <button onclick="cambiarTab(1)" id="tab-btn-1" class="tab-btn px-8 py-4 text-lg whitespace-nowrap">📋 Movimientos</button>
-                <button onclick="cambiarTab(2)" id="tab-btn-2" class="tab-btn px-8 py-4 text-lg whitespace-nowrap">📊 Estadísticas</button>
+        <div class="max-w-screen-2xl mx-auto px-8 py-8">
+            <div class="flex border-b border-zinc-700 mb-8">
+                <button onclick="cambiarTab(0)" id="tab-btn-0" class="tab-btn active px-10 py-4 text-lg">📦 Inventario</button>
+                <button onclick="cambiarTab(1)" id="tab-btn-1" class="tab-btn px-10 py-4 text-lg">📋 Movimientos</button>
+                <button onclick="cambiarTab(2)" id="tab-btn-2" class="tab-btn px-10 py-4 text-lg">📊 Estadísticas</button>
             </div>
 
             <!-- TAB INVENTARIO -->
             <div id="tab-inventario">
-                <div class="action-buttons mb-8">
+                <div class="flex flex-col md:flex-row gap-6 mb-8">
                     <div class="flex-1 relative">
                         <i class="fa-solid fa-magnifying-glass absolute left-6 top-1/2 -translate-y-1/2 text-zinc-500"></i>
                         <input id="buscador" onkeyup="filtrarTabla()" type="text" class="w-full bg-zinc-900 border border-zinc-700 focus:border-yellow-500 rounded-3xl pl-14 py-4 text-white placeholder-zinc-500 focus:outline-none" placeholder="Buscar por nombre...">
@@ -130,9 +124,8 @@
                         <i class="fa-solid fa-file-excel"></i><span class="hidden md:block">Exportar Inventario</span>
                     </button>
                 </div>
-
-                <div class="table-container bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800">
-                    <table class="w-full min-w-[700px]">
+                <div class="bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800">
+                    <table class="w-full">
                         <thead>
                             <tr class="border-b border-zinc-800 bg-zinc-950">
                                 <th class="text-left py-6 px-8 font-medium text-zinc-400 text-sm">ID</th>
@@ -151,8 +144,8 @@
 
             <!-- TAB MOVIMIENTOS -->
             <div id="tab-movimientos" class="hidden">
-                <div class="table-container bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800">
-                    <table class="w-full min-w-[700px]">
+                <div class="bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800">
+                    <table class="w-full">
                         <thead>
                             <tr class="border-b border-zinc-800 bg-zinc-950">
                                 <th class="text-left py-6 px-8 font-medium text-zinc-400 text-sm">FECHA</th>
@@ -171,7 +164,7 @@
 
             <!-- TAB ESTADÍSTICAS -->
             <div id="tab-estadisticas" class="hidden">
-                <div class="stat-grid">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div class="stat-card bg-zinc-900 border border-emerald-500/30 rounded-3xl p-6">
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center">
@@ -183,7 +176,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- las otras 3 tarjetas iguales -->
                     <div class="stat-card bg-zinc-900 border border-blue-500/30 rounded-3xl p-6">
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center">
@@ -239,11 +231,93 @@
         </div>
     </div>
 
-    <!-- MODALES (iguales) -->
-    <!-- (modal-producto y modal-movimiento iguales que antes) -->
+    <!-- MODAL PRODUCTO -->
+    <div id="modal-producto" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+        <div class="modal bg-zinc-900 rounded-3xl w-full max-w-lg mx-4 border border-zinc-700 shadow-2xl">
+            <div class="px-8 pt-8 pb-6 border-b border-zinc-800 flex items-center justify-between">
+                <h3 id="modal-producto-titulo" class="text-2xl font-semibold text-yellow-400">Nuevo Producto</h3>
+                <button onclick="cerrarModalProducto()" class="text-3xl leading-none text-zinc-400 hover:text-white">×</button>
+            </div>
+            <div class="p-8 space-y-6">
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="text-xs font-medium text-zinc-400 block mb-2">NOMBRE / DESCRIPCIÓN</label>
+                        <input id="nombre" type="text" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500">
+                    </div>
+                    <div>
+                        <label class="text-xs font-medium text-zinc-400 block mb-2">CATEGORÍA</label>
+                        <select id="categoria" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500">
+                            <option value="Llantas">Llantas</option>
+                            <option value="Rines">Rines</option>
+                            <option value="Accesorios">Accesorios</option>
+                            <option value="Herramientas">Herramientas</option>
+                            <option value="Aceites y Lubricantes">Aceites y Lubricantes</option>
+                            <option value="Repuestos">Repuestos</option>
+                            <option value="Otros">Otros</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-6">
+                    <div>
+                        <label class="text-xs font-medium text-zinc-400 block mb-2">CANTIDAD</label>
+                        <input id="cantidad" type="number" min="0" value="1" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500">
+                    </div>
+                    <div>
+                        <label class="text-xs font-medium text-zinc-400 block mb-2">PRECIO UNITARIO</label>
+                        <input id="precio" type="number" step="0.01" value="0" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500">
+                    </div>
+                    <div>
+                        <label class="text-xs font-medium text-zinc-400 block mb-2">TAMAÑO (opcional)</label>
+                        <input id="tamano" type="text" placeholder="205/55 R16" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500">
+                    </div>
+                </div>
+            </div>
+            <div class="p-8 bg-zinc-950 rounded-b-3xl flex gap-4">
+                <button onclick="cerrarModalProducto()" class="flex-1 py-5 bg-zinc-800 hover:bg-zinc-700 rounded-2xl font-medium transition">CANCELAR</button>
+                <button onclick="guardarProducto()" class="flex-1 py-5 bg-yellow-500 hover:bg-yellow-400 text-zinc-900 font-semibold rounded-2xl transition">GUARDAR PRODUCTO</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL MOVIMIENTO -->
+    <div id="modal-movimiento" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+        <div class="modal bg-zinc-900 rounded-3xl w-full max-w-lg mx-4 border border-zinc-700 shadow-2xl">
+            <div class="px-8 pt-8 pb-6 border-b border-zinc-800 flex items-center justify-between">
+                <h3 class="text-2xl font-semibold text-yellow-400">Nuevo Movimiento</h3>
+                <button onclick="cerrarModalMovimiento()" class="text-3xl leading-none text-zinc-400 hover:text-white">×</button>
+            </div>
+            <div class="p-8 space-y-6">
+                <div class="flex gap-4">
+                    <button onclick="seleccionarTipo('venta')" id="btn-venta" class="flex-1 py-4 rounded-2xl border-2 border-emerald-500 text-emerald-400 font-semibold">VENTA</button>
+                    <button onclick="seleccionarTipo('compra')" id="btn-compra" class="flex-1 py-4 rounded-2xl border-2 border-blue-500 text-blue-400 font-semibold">COMPRA</button>
+                </div>
+                <div>
+                    <label class="text-xs font-medium text-zinc-400 block mb-2">Producto</label>
+                    <select id="producto-select" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500"></select>
+                </div>
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="text-xs font-medium text-zinc-400 block mb-2">Cantidad</label>
+                        <input id="mov-cantidad" type="number" min="1" value="1" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500">
+                    </div>
+                    <div>
+                        <label id="label-precio" class="text-xs font-medium text-zinc-400 block mb-2">Precio de Venta</label>
+                        <input id="mov-precio" type="number" step="0.01" value="0" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs font-medium text-zinc-400 block mb-2">Fecha</label>
+                    <input id="mov-fecha" type="date" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500">
+                </div>
+            </div>
+            <div class="p-8 bg-zinc-950 rounded-b-3xl flex gap-4">
+                <button onclick="cerrarModalMovimiento()" class="flex-1 py-5 bg-zinc-800 hover:bg-zinc-700 rounded-2xl font-medium transition">CANCELAR</button>
+                <button onclick="guardarMovimiento()" class="flex-1 py-5 bg-yellow-500 hover:bg-yellow-400 text-zinc-900 font-semibold rounded-2xl transition">GUARDAR MOVIMIENTO</button>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // === SCRIPT COMPLETO Y FUNCIONAL (mismo que antes) ===
         let inventario = [];
         let movimientos = [];
         let editandoId = null;
@@ -294,8 +368,259 @@
             if (tab === 2) { document.getElementById('tab-estadisticas').classList.remove('hidden'); calcularEstadisticas(); }
         }
 
-        // (el resto del script es exactamente el mismo que la versión anterior que ya funcionaba)
-        // renderizarTabla, guardarProducto, guardarMovimiento, exportarInventarioExcel, exportarMovimientosExcel, etc.
+        function renderizarTabla() {
+            const tbody = document.getElementById('tabla-inventario');
+            tbody.innerHTML = '';
+            inventario.forEach(item => {
+                const valor = item.cantidad * item.precio;
+                const fila = document.createElement('tr');
+                fila.className = item.cantidad < 5 ? 'stock-bajo' : '';
+                fila.innerHTML = `
+                    <td class="py-6 px-8 font-mono text-yellow-400">#${String(item.id).padStart(3,'0')}</td>
+                    <td class="py-6 px-8">${item.nombre}</td>
+                    <td class="py-6 px-8">${item.categoria}</td>
+                    <td class="py-6 px-8 text-right">${item.cantidad} unidades</td>
+                    <td class="py-6 px-8 text-right">$${item.precio.toFixed(2)}</td>
+                    <td class="py-6 px-8 text-right font-bold">$${valor.toFixed(2)}</td>
+                    <td class="py-6 px-8">
+                        <button onclick="editarProducto(${item.id})" class="text-amber-400 mr-4"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="eliminarProducto(${item.id})" class="text-red-400"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(fila);
+            });
+        }
+
+        function filtrarTabla() {
+            const term = document.getElementById('buscador').value.toLowerCase().trim();
+            const filtrados = inventario.filter(p => p.nombre.toLowerCase().includes(term));
+            const tbody = document.getElementById('tabla-inventario');
+            tbody.innerHTML = '';
+            filtrados.forEach(item => {
+                const valor = item.cantidad * item.precio;
+                const fila = document.createElement('tr');
+                fila.className = item.cantidad < 5 ? 'stock-bajo' : '';
+                fila.innerHTML = `
+                    <td class="py-6 px-8 font-mono text-yellow-400">#${String(item.id).padStart(3,'0')}</td>
+                    <td class="py-6 px-8">${item.nombre}</td>
+                    <td class="py-6 px-8">${item.categoria}</td>
+                    <td class="py-6 px-8 text-right">${item.cantidad} unidades</td>
+                    <td class="py-6 px-8 text-right">$${item.precio.toFixed(2)}</td>
+                    <td class="py-6 px-8 text-right font-bold">$${valor.toFixed(2)}</td>
+                    <td class="py-6 px-8">
+                        <button onclick="editarProducto(${item.id})" class="text-amber-400 mr-4"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="eliminarProducto(${item.id})" class="text-red-400"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(fila);
+            });
+        }
+
+        function abrirModalAgregar() {
+            editandoId = null;
+            document.getElementById('modal-producto-titulo').textContent = 'Nuevo Producto';
+            document.getElementById('nombre').value = '';
+            document.getElementById('categoria').value = 'Llantas';
+            document.getElementById('cantidad').value = '1';
+            document.getElementById('precio').value = '0';
+            document.getElementById('tamano').value = '';
+            document.getElementById('modal-producto').classList.remove('hidden');
+        }
+
+        function cerrarModalProducto() { document.getElementById('modal-producto').classList.add('hidden'); }
+
+        function guardarProducto() {
+            const nombre = document.getElementById('nombre').value.trim();
+            if (!nombre) return alert('El nombre es obligatorio');
+            const cat = document.getElementById('categoria').value;
+            const cant = parseInt(document.getElementById('cantidad').value) || 0;
+            const prec = parseFloat(document.getElementById('precio').value) || 0;
+            const tam = document.getElementById('tamano').value;
+
+            if (editandoId !== null) {
+                const p = inventario.find(x => x.id === editandoId);
+                p.nombre = nombre; p.categoria = cat; p.cantidad = cant; p.precio = prec; p.tamano = tam;
+            } else {
+                const nuevoId = inventario.length ? Math.max(...inventario.map(x => x.id)) + 1 : 1;
+                inventario.push({id: nuevoId, nombre, categoria: cat, cantidad: cant, precio: prec, tamano: tam});
+            }
+            guardarInventario();
+            renderizarTabla();
+            cerrarModalProducto();
+        }
+
+        function editarProducto(id) {
+            const p = inventario.find(x => x.id === id);
+            editandoId = id;
+            document.getElementById('modal-producto-titulo').textContent = 'Editar Producto';
+            document.getElementById('nombre').value = p.nombre;
+            document.getElementById('categoria').value = p.categoria;
+            document.getElementById('cantidad').value = p.cantidad;
+            document.getElementById('precio').value = p.precio;
+            document.getElementById('tamano').value = p.tamano || '';
+            document.getElementById('modal-producto').classList.remove('hidden');
+        }
+
+        function eliminarProducto(id) {
+            if (confirm('¿Eliminar este producto?')) {
+                inventario = inventario.filter(x => x.id !== id);
+                guardarInventario();
+                renderizarTabla();
+            }
+        }
+
+        function abrirModalMovimiento() {
+            tipoMovActual = 'venta';
+            document.getElementById('btn-venta').classList.add('border-emerald-500','text-emerald-400');
+            document.getElementById('btn-compra').classList.remove('border-emerald-500','text-emerald-400');
+            document.getElementById('label-precio').textContent = 'Precio de Venta';
+            llenarSelectProductos();
+            document.getElementById('mov-cantidad').value = '1';
+            document.getElementById('mov-precio').value = '0';
+            document.getElementById('mov-fecha').value = new Date().toISOString().slice(0,10);
+            document.getElementById('modal-movimiento').classList.remove('hidden');
+        }
+
+        function cerrarModalMovimiento() { document.getElementById('modal-movimiento').classList.add('hidden'); }
+
+        function seleccionarTipo(tipo) {
+            tipoMovActual = tipo;
+            if (tipo === 'venta') {
+                document.getElementById('btn-venta').classList.add('border-emerald-500','text-emerald-400');
+                document.getElementById('btn-compra').classList.remove('border-emerald-500','text-emerald-400');
+                document.getElementById('label-precio').textContent = 'Precio de Venta';
+            } else {
+                document.getElementById('btn-compra').classList.add('border-emerald-500','text-emerald-400');
+                document.getElementById('btn-venta').classList.remove('border-emerald-500','text-emerald-400');
+                document.getElementById('label-precio').textContent = 'Precio de Compra';
+            }
+        }
+
+        function llenarSelectProductos() {
+            const select = document.getElementById('producto-select');
+            select.innerHTML = '<option value="">Selecciona un producto...</option>';
+            inventario.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.id;
+                opt.textContent = p.nombre;
+                select.appendChild(opt);
+            });
+        }
+
+        function guardarMovimiento() {
+            const prodId = parseInt(document.getElementById('producto-select').value);
+            const cant = parseInt(document.getElementById('mov-cantidad').value);
+            const precio = parseFloat(document.getElementById('mov-precio').value);
+            const fecha = document.getElementById('mov-fecha').value;
+
+            if (!prodId || !cant || !precio) return alert('Completa todos los campos');
+
+            const producto = inventario.find(p => p.id === prodId);
+            if (!producto) return;
+
+            if (tipoMovActual === 'venta' && cant > producto.cantidad) return alert('No hay suficiente stock');
+
+            if (tipoMovActual === 'venta') producto.cantidad -= cant;
+            else producto.cantidad += cant;
+
+            movimientos.unshift({
+                id: Date.now(),
+                fecha: fecha,
+                tipo: tipoMovActual,
+                producto_id: prodId,
+                nombre: producto.nombre,
+                cantidad: cant,
+                precio: precio,
+                total: cant * precio
+            });
+
+            guardarInventario();
+            guardarMovimientos();
+            cerrarModalMovimiento();
+            renderizarTabla();
+            if (!document.getElementById('tab-movimientos').classList.contains('hidden')) renderizarMovimientos();
+            if (!document.getElementById('tab-estadisticas').classList.contains('hidden')) calcularEstadisticas();
+        }
+
+        function renderizarMovimientos() {
+            const tbody = document.getElementById('tabla-movimientos');
+            tbody.innerHTML = '';
+            const sorted = [...movimientos].sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
+            sorted.forEach(m => {
+                const fila = document.createElement('tr');
+                fila.innerHTML = `
+                    <td class="py-6 px-8">${m.fecha}</td>
+                    <td class="py-6 px-8"><span class="px-4 py-1 rounded-3xl ${m.tipo==='venta'?'bg-emerald-900 text-emerald-300':'bg-blue-900 text-blue-300'}">${m.tipo.toUpperCase()}</span></td>
+                    <td class="py-6 px-8">${m.nombre}</td>
+                    <td class="py-6 px-8 text-right">${m.cantidad} unidades</td>
+                    <td class="py-6 px-8 text-right">$${m.precio.toFixed(2)}</td>
+                    <td class="py-6 px-8 text-right font-bold">$${m.total.toFixed(2)}</td>
+                    <td class="py-6 px-8">
+                        <button onclick="eliminarMovimiento(${m.id})" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(fila);
+            });
+        }
+
+        function eliminarMovimiento(id) {
+            if (!confirm('¿Eliminar este movimiento? El stock se corregirá automáticamente.')) return;
+            const mov = movimientos.find(m => m.id === id);
+            if (!mov) return;
+            const prod = inventario.find(p => p.id === mov.producto_id);
+            if (prod) {
+                if (mov.tipo === 'venta') prod.cantidad += mov.cantidad;
+                else prod.cantidad -= mov.cantidad;
+            }
+            movimientos = movimientos.filter(m => m.id !== id);
+            guardarInventario();
+            guardarMovimientos();
+            renderizarTabla();
+            renderizarMovimientos();
+            calcularEstadisticas();
+        }
+
+        function calcularEstadisticas() {
+            let ventas = 0, compras = 0;
+            movimientos.forEach(m => m.tipo === 'venta' ? ventas += m.total : compras += m.total);
+            const ganancia = ventas - compras;
+            let valorInv = 0;
+            inventario.forEach(p => valorInv += p.cantidad * p.precio);
+
+            document.getElementById('stat-ventas').textContent = '$' + ventas.toFixed(2);
+            document.getElementById('stat-compras').textContent = '$' + compras.toFixed(2);
+            document.getElementById('stat-ganancia').textContent = '$' + ganancia.toFixed(2);
+            document.getElementById('stat-inventario').textContent = '$' + valorInv.toFixed(2);
+
+            const top = {};
+            movimientos.filter(m => m.tipo === 'venta').forEach(m => {
+                top[m.nombre] = (top[m.nombre] || 0) + m.cantidad;
+            });
+            const sorted = Object.entries(top).sort((a,b) => b[1] - a[1]).slice(0,5);
+            let html = sorted.length ? '' : 'Aún no hay ventas registradas';
+            sorted.forEach(([nombre, cant]) => {
+                html += `<div class="flex justify-between py-3 border-b border-zinc-700 last:border-none"><span>${nombre}</span><span class="text-emerald-400">${cant} unidades</span></div>`;
+            });
+            document.getElementById('top-vendidos').innerHTML = html || 'Aún no hay ventas registradas';
+        }
+
+        function exportarInventarioExcel() {
+            if (inventario.length === 0) return alert('No hay productos');
+            const data = [["LLANTERA PELÓN - INVENTARIO","","","","","",""],["Fecha: " + new Date().toLocaleDateString('es-MX'),"","","","","",""],[],["ID","Producto","Categoría","Cantidad","Precio Unitario","Tamaño","Valor Total"],...inventario.map(p => [p.id, p.nombre, p.categoria, p.cantidad, p.precio, p.tamano || '', p.cantidad * p.precio])];
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Inventario");
+            XLSX.writeFile(wb, `inventario_llantera_pelon_${new Date().toISOString().slice(0,10)}.xlsx`);
+        }
+
+        function exportarMovimientosExcel() {
+            if (movimientos.length === 0) return alert('No hay movimientos');
+            const data = [["LLANTERA PELÓN - MOVIMIENTOS","","","","",""],["Exportado: " + new Date().toLocaleDateString('es-MX'),"","","","",""],[],["Fecha","Tipo","Producto","Cantidad","Precio","Total"],...movimientos.map(m => [m.fecha, m.tipo.toUpperCase(), m.nombre, m.cantidad, m.precio, m.total])];
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Movimientos");
+            XLSX.writeFile(wb, `movimientos_llantera_pelon_${new Date().toISOString().slice(0,10)}.xlsx`);
+        }
 
         window.onload = () => {};
     </script>

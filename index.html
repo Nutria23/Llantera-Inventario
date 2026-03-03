@@ -16,7 +16,7 @@
         .tab-btn { transition: all 0.2s ease; }
         .tab-btn.active { border-bottom: 4px solid #eab308; color: #eab308; font-weight: 600; }
 
-        /* EFECTO REDONDEADO PARA LAS PESTAÑAS */
+        /* Pestañas redondeadas */
         .tab-btn:hover {
             background-color: #27272a;
             border-radius: 9999px;
@@ -26,16 +26,13 @@
             padding-right: 2rem;
         }
 
-        /* EFECTO NORMAL PARA TODOS LOS DEMÁS BOTONES */
+        /* Efecto normal para los demás botones */
         button:not(.tab-btn) {
             transition: all 0.2s ease;
         }
         button:not(.tab-btn):hover {
             transform: scale(1.05);
             box-shadow: 0 10px 15px -3px rgb(234 179 8 / 0.4);
-        }
-        button:not(.tab-btn):active {
-            transform: scale(0.98);
         }
     </style>
 </head>
@@ -104,7 +101,6 @@
         </header>
 
         <div class="max-w-screen-2xl mx-auto px-8 py-8">
-            <!-- PESTAÑAS -->
             <div class="flex border-b border-zinc-700 mb-8">
                 <button onclick="cambiarTab(0)" id="tab-btn-0" class="tab-btn active px-10 py-4 text-lg">📦 Inventario</button>
                 <button onclick="cambiarTab(1)" id="tab-btn-1" class="tab-btn px-10 py-4 text-lg">📋 Movimientos</button>

@@ -6,7 +6,6 @@
     <title>LLANTERA PELÓN - Control de Inventario</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- LIBRERÍA EXCEL PROFESIONAL -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
@@ -14,10 +13,30 @@
         .modal { animation: modalPop 0.3s ease-out; }
         @keyframes modalPop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .stock-bajo { background-color: #fee2e2; color: #b91c1c; }
-        .tab-btn { transition: all 0.2s; }
+        .tab-btn { transition: all 0.2s ease; }
         .tab-btn.active { border-bottom: 4px solid #eab308; color: #eab308; font-weight: 600; }
-        .mov-venta { border-left: 5px solid #22c55e; }
-        .mov-compra { border-left: 5px solid #3b82f6; }
+
+        /* EFECTO REDONDEADO PARA LAS PESTAÑAS */
+        .tab-btn:hover {
+            background-color: #27272a;
+            border-radius: 9999px;
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px -3px rgb(234 179 8 / 0.4);
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        /* EFECTO NORMAL PARA TODOS LOS DEMÁS BOTONES */
+        button:not(.tab-btn) {
+            transition: all 0.2s ease;
+        }
+        button:not(.tab-btn):hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px -3px rgb(234 179 8 / 0.4);
+        }
+        button:not(.tab-btn):active {
+            transform: scale(0.98);
+        }
     </style>
 </head>
 <body class="bg-zinc-950 text-white">
@@ -30,9 +49,8 @@
                     <i class="fa-solid fa-car-side text-5xl text-zinc-900"></i>
                 </div>
                 <h1 class="text-4xl font-bold mt-6 text-yellow-400">LLANTERA PELÓN</h1>
-                <p class="text-zinc-400 mt-2">Control de Inventario + Ventas</p>
+                <p class="text-zinc-400 mt-2">Control + Ventas</p>
             </div>
-
             <div class="space-y-6">
                 <div>
                     <label class="block text-sm font-medium text-zinc-400 mb-1">Usuario</label>
@@ -41,7 +59,6 @@
                         <input id="username" type="text" class="w-full bg-zinc-900 border border-zinc-700 rounded-2xl px-11 py-4 text-white focus:outline-none focus:border-yellow-500 transition" placeholder="usuario">
                     </div>
                 </div>
-                
                 <div>
                     <label class="block text-sm font-medium text-zinc-400 mb-1">Contraseña</label>
                     <div class="relative">
@@ -49,20 +66,16 @@
                         <input id="password" type="password" class="w-full bg-zinc-900 border border-zinc-700 rounded-2xl px-11 py-4 text-white focus:outline-none focus:border-yellow-500 transition" placeholder="••••••••">
                     </div>
                 </div>
-
                 <button onclick="iniciarSesion()" class="w-full bg-yellow-500 hover:bg-yellow-400 transition text-zinc-900 font-semibold py-4 rounded-2xl text-lg shadow-lg shadow-yellow-500/30">
                     INICIAR SESIÓN
                 </button>
-
                 <p id="login-error" class="text-red-500 text-center text-sm hidden">Usuario o contraseña incorrectos</p>
             </div>
         </div>
     </div>
 
-    <!-- APLICACIÓN -->
+    <!-- APP -->
     <div id="app-screen" class="hidden min-h-screen bg-zinc-950">
-
-        <!-- HEADER -->
         <header class="bg-zinc-900 border-b border-zinc-800 sticky top-0 z-50">
             <div class="max-w-screen-2xl mx-auto px-8 py-5 flex items-center justify-between">
                 <div class="flex items-center gap-x-4">
@@ -74,15 +87,15 @@
                         <p class="text-xs text-zinc-500 -mt-1">Control + Ventas</p>
                     </div>
                 </div>
-                <div class="flex items-center gap-x-8">
+                <div class="flex items-center gap-x-6">
                     <div onclick="cerrarSesion()" class="flex items-center gap-x-2 text-zinc-400 hover:text-white cursor-pointer transition">
                         <i class="fa-solid fa-right-from-bracket"></i>
                         <span class="text-sm font-medium">Cerrar sesión</span>
                     </div>
-                    <div class="flex items-center gap-x-3 bg-zinc-800 px-5 py-2 rounded-3xl">
+                    <div class="bg-zinc-800 px-5 py-2 rounded-3xl flex items-center gap-x-3">
                         <div class="w-8 h-8 bg-emerald-400 rounded-2xl flex items-center justify-center text-xs font-bold text-zinc-900">P</div>
                         <div>
-                            <p class="text-sm font-semibold">Pelón</p>
+                            <p class="text-sm font-semibold text-white">Pelón</p>
                             <p class="text-[10px] text-emerald-400 -mt-0.5">Administrador</p>
                         </div>
                     </div>
@@ -91,7 +104,6 @@
         </header>
 
         <div class="max-w-screen-2xl mx-auto px-8 py-8">
-
             <!-- PESTAÑAS -->
             <div class="flex border-b border-zinc-700 mb-8">
                 <button onclick="cambiarTab(0)" id="tab-btn-0" class="tab-btn active px-10 py-4 text-lg">📦 Inventario</button>
@@ -104,7 +116,7 @@
                 <div class="flex flex-col md:flex-row gap-6 mb-8">
                     <div class="flex-1 relative">
                         <i class="fa-solid fa-magnifying-glass absolute left-6 top-1/2 -translate-y-1/2 text-zinc-500"></i>
-                        <input id="buscador" onkeyup="filtrarTabla()" type="text" class="w-full bg-zinc-900 border border-zinc-700 focus:border-yellow-500 rounded-3xl pl-14 py-4 text-white placeholder-zinc-500 focus:outline-none" placeholder="Buscar por nombre, categoría o tamaño...">
+                        <input id="buscador" onkeyup="filtrarTabla()" type="text" class="w-full bg-zinc-900 border border-zinc-700 focus:border-yellow-500 rounded-3xl pl-14 py-4 text-white placeholder-zinc-500 focus:outline-none" placeholder="Buscar por nombre...">
                     </div>
                     <button onclick="abrirModalAgregar()" class="bg-yellow-500 hover:bg-yellow-400 transition text-zinc-900 font-semibold px-10 rounded-3xl flex items-center gap-x-3 shadow-lg shadow-yellow-500/30">
                         <i class="fa-solid fa-plus"></i><span>NUEVO PRODUCTO</span>
@@ -113,11 +125,9 @@
                         <i class="fa-solid fa-exchange-alt"></i><span>NUEVO MOVIMIENTO</span>
                     </button>
                     <button onclick="exportarInventarioExcel()" class="bg-zinc-800 hover:bg-zinc-700 transition border border-zinc-700 px-8 rounded-3xl flex items-center gap-x-3">
-                        <i class="fa-solid fa-file-excel"></i>
-                        <span class="hidden md:block">Exportar Inventario</span>
+                        <i class="fa-solid fa-file-excel"></i><span class="hidden md:block">Exportar Inventario</span>
                     </button>
                 </div>
-
                 <div class="bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800">
                     <table class="w-full">
                         <thead>
@@ -148,6 +158,7 @@
                                 <th class="text-right py-6 px-8 font-medium text-zinc-400 text-sm">CANTIDAD</th>
                                 <th class="text-right py-6 px-8 font-medium text-zinc-400 text-sm">PRECIO</th>
                                 <th class="text-right py-6 px-8 font-medium text-zinc-400 text-sm">TOTAL</th>
+                                <th class="w-20"></th>
                             </tr>
                         </thead>
                         <tbody id="tabla-movimientos" class="divide-y divide-zinc-800"></tbody>
@@ -157,39 +168,47 @@
 
             <!-- TAB ESTADÍSTICAS -->
             <div id="tab-estadisticas" class="hidden">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="bg-zinc-900 rounded-3xl p-8 border border-emerald-500/30">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="stat-card bg-zinc-900 border border-emerald-500/30 rounded-3xl p-6">
                         <div class="flex items-center gap-4">
-                            <i class="fa-solid fa-arrow-trend-up text-4xl text-emerald-400"></i>
+                            <div class="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center">
+                                <i class="fa-solid fa-arrow-trend-up text-3xl text-emerald-400"></i>
+                            </div>
                             <div>
-                                <p class="text-zinc-400 text-sm">INGRESOS POR VENTAS</p>
+                                <p class="text-emerald-400 text-xs font-medium tracking-widest">INGRESOS POR VENTAS</p>
                                 <p id="stat-ventas" class="text-4xl font-bold text-emerald-400">$0.00</p>
                             </div>
                         </div>
                     </div>
-                    <div class="bg-zinc-900 rounded-3xl p-8 border border-blue-500/30">
+                    <div class="stat-card bg-zinc-900 border border-blue-500/30 rounded-3xl p-6">
                         <div class="flex items-center gap-4">
-                            <i class="fa-solid fa-arrow-trend-down text-4xl text-blue-400"></i>
+                            <div class="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center">
+                                <i class="fa-solid fa-arrow-trend-down text-3xl text-blue-400"></i>
+                            </div>
                             <div>
-                                <p class="text-zinc-400 text-sm">GASTOS EN COMPRAS</p>
+                                <p class="text-blue-400 text-xs font-medium tracking-widest">GASTOS EN COMPRAS</p>
                                 <p id="stat-compras" class="text-4xl font-bold text-blue-400">$0.00</p>
                             </div>
                         </div>
                     </div>
-                    <div class="bg-zinc-900 rounded-3xl p-8 border border-yellow-500/30">
+                    <div class="stat-card bg-zinc-900 border border-yellow-500/30 rounded-3xl p-6">
                         <div class="flex items-center gap-4">
-                            <i class="fa-solid fa-wallet text-4xl text-yellow-400"></i>
+                            <div class="w-12 h-12 bg-yellow-500/10 rounded-2xl flex items-center justify-center">
+                                <i class="fa-solid fa-wallet text-3xl text-yellow-400"></i>
+                            </div>
                             <div>
-                                <p class="text-zinc-400 text-sm">GANANCIA BRUTA</p>
+                                <p class="text-yellow-400 text-xs font-medium tracking-widest">GANANCIA BRUTA</p>
                                 <p id="stat-ganancia" class="text-4xl font-bold text-yellow-400">$0.00</p>
                             </div>
                         </div>
                     </div>
-                    <div class="bg-zinc-900 rounded-3xl p-8 border border-zinc-400/30">
+                    <div class="stat-card bg-zinc-900 border border-zinc-400/30 rounded-3xl p-6">
                         <div class="flex items-center gap-4">
-                            <i class="fa-solid fa-boxes-stacked text-4xl text-zinc-400"></i>
+                            <div class="w-12 h-12 bg-zinc-400/10 rounded-2xl flex items-center justify-center">
+                                <i class="fa-solid fa-boxes-stacked text-3xl text-zinc-400"></i>
+                            </div>
                             <div>
-                                <p class="text-zinc-400 text-sm">VALOR DEL INVENTARIO</p>
+                                <p class="text-zinc-400 text-xs font-medium tracking-widest">VALOR DEL INVENTARIO</p>
                                 <p id="stat-inventario" class="text-4xl font-bold text-white">$0.00</p>
                             </div>
                         </div>
@@ -197,33 +216,26 @@
                 </div>
 
                 <div class="mt-10">
-                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-3"><i class="fa-solid fa-trophy"></i> PRODUCTOS MÁS VENDIDOS</h3>
-                    <div id="top-vendidos" class="bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800"></div>
-                </div>
-
-                <div class="mt-8 flex justify-end">
-                    <button onclick="exportarMovimientosExcel()" class="bg-emerald-600 hover:bg-emerald-500 px-8 py-4 rounded-3xl flex items-center gap-3">
-                        <i class="fa-solid fa-file-excel"></i>
-                        <span>Exportar Movimientos a Excel</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- FOOTER INFO -->
-            <div class="mt-10 flex justify-between text-xs text-zinc-500 px-2">
-                <div id="total-productos" class="font-mono">0 productos • $0.00 total en inventario</div>
-                <div class="flex items-center gap-x-6">
-                    <div onclick="mostrarEstadisticasRapidas()" class="cursor-pointer hover:text-yellow-400 transition flex items-center gap-x-2">
-                        <i class="fa-solid fa-chart-simple"></i><span>Estadísticas rápidas</span>
+                    <div class="flex items-center gap-3 mb-4">
+                        <i class="fa-solid fa-trophy text-3xl text-yellow-400"></i>
+                        <h3 class="text-2xl font-semibold">PRODUCTOS MÁS VENDIDOS</h3>
                     </div>
-                    <div class="text-zinc-600">•</div>
-                    <div class="font-mono">v2.0 - Local</div>
+                    <div id="top-vendidos" class="bg-zinc-900 border border-zinc-700 rounded-3xl p-8 text-center text-zinc-400 min-h-[120px]">
+                        Aún no hay ventas registradas
+                    </div>
+                </div>
+
+                <div class="flex justify-end mt-8">
+                    <button onclick="exportarMovimientosExcel()" class="bg-emerald-600 hover:bg-emerald-500 px-8 py-4 rounded-3xl font-medium flex items-center gap-3">
+                        <i class="fa-solid fa-file-excel"></i>
+                        Exportar Movimientos a Excel
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL NUEVO PRODUCTO -->
+    <!-- MODAL PRODUCTO -->
     <div id="modal-producto" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
         <div class="modal bg-zinc-900 rounded-3xl w-full max-w-lg mx-4 border border-zinc-700 shadow-2xl">
             <div class="px-8 pt-8 pb-6 border-b border-zinc-800 flex items-center justify-between">
@@ -231,7 +243,6 @@
                 <button onclick="cerrarModalProducto()" class="text-3xl leading-none text-zinc-400 hover:text-white">×</button>
             </div>
             <div class="p-8 space-y-6">
-                <!-- campos iguales que antes -->
                 <div class="grid grid-cols-2 gap-6">
                     <div>
                         <label class="text-xs font-medium text-zinc-400 block mb-2">NOMBRE / DESCRIPCIÓN</label>
@@ -256,7 +267,7 @@
                         <input id="cantidad" type="number" min="0" value="1" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500">
                     </div>
                     <div>
-                        <label class="text-xs font-medium text-zinc-400 block mb-2">PRECIO UNITARIO (venta)</label>
+                        <label class="text-xs font-medium text-zinc-400 block mb-2">PRECIO UNITARIO</label>
                         <input id="precio" type="number" step="0.01" value="0" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500">
                     </div>
                     <div>
@@ -267,31 +278,27 @@
             </div>
             <div class="p-8 bg-zinc-950 rounded-b-3xl flex gap-4">
                 <button onclick="cerrarModalProducto()" class="flex-1 py-5 bg-zinc-800 hover:bg-zinc-700 rounded-2xl font-medium transition">CANCELAR</button>
-                <button onclick="guardarProducto()" id="btn-guardar-producto" class="flex-1 py-5 bg-yellow-500 hover:bg-yellow-400 text-zinc-900 font-semibold rounded-2xl transition">GUARDAR PRODUCTO</button>
+                <button onclick="guardarProducto()" class="flex-1 py-5 bg-yellow-500 hover:bg-yellow-400 text-zinc-900 font-semibold rounded-2xl transition">GUARDAR PRODUCTO</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL NUEVO MOVIMIENTO (VENTA / COMPRA) -->
+    <!-- MODAL MOVIMIENTO -->
     <div id="modal-movimiento" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
         <div class="modal bg-zinc-900 rounded-3xl w-full max-w-lg mx-4 border border-zinc-700 shadow-2xl">
             <div class="px-8 pt-8 pb-6 border-b border-zinc-800 flex items-center justify-between">
-                <h3 id="modal-mov-titulo" class="text-2xl font-semibold text-yellow-400">Nuevo Movimiento</h3>
+                <h3 class="text-2xl font-semibold text-yellow-400">Nuevo Movimiento</h3>
                 <button onclick="cerrarModalMovimiento()" class="text-3xl leading-none text-zinc-400 hover:text-white">×</button>
             </div>
             <div class="p-8 space-y-6">
                 <div class="flex gap-4">
-                    <button onclick="seleccionarTipo('venta')" id="btn-venta" class="flex-1 py-4 rounded-2xl border-2 border-emerald-500 text-emerald-400 font-semibold active-type">VENTA</button>
-                    <button onclick="seleccionarTipo('compra')" id="btn-compra" class="flex-1 py-4 rounded-2xl border-2 border-blue-500 text-blue-400 font-semibold">COMPRA / ENTRADA</button>
+                    <button onclick="seleccionarTipo('venta')" id="btn-venta" class="flex-1 py-4 rounded-2xl border-2 border-emerald-500 text-emerald-400 font-semibold">VENTA</button>
+                    <button onclick="seleccionarTipo('compra')" id="btn-compra" class="flex-1 py-4 rounded-2xl border-2 border-blue-500 text-blue-400 font-semibold">COMPRA</button>
                 </div>
-
                 <div>
                     <label class="text-xs font-medium text-zinc-400 block mb-2">Producto</label>
-                    <select id="producto-select" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500">
-                        <!-- JS llena -->
-                    </select>
+                    <select id="producto-select" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500"></select>
                 </div>
-
                 <div class="grid grid-cols-2 gap-6">
                     <div>
                         <label class="text-xs font-medium text-zinc-400 block mb-2">Cantidad</label>
@@ -302,7 +309,6 @@
                         <input id="mov-precio" type="number" step="0.01" value="0" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500">
                     </div>
                 </div>
-
                 <div>
                     <label class="text-xs font-medium text-zinc-400 block mb-2">Fecha</label>
                     <input id="mov-fecha" type="date" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500">
@@ -316,415 +322,311 @@
     </div>
 
     <script>
-        let inventario = []
-        let movimientos = []
-        let editandoId = null
-        let tipoMovActual = 'venta'
-        let tabActual = 0
+        let inventario = [];
+        let movimientos = [];
+        let editandoId = null;
+        let tipoMovActual = 'venta';
 
-        // ==================== LOGIN ====================
         function iniciarSesion() {
-            const usuario = document.getElementById('username').value.trim().toLowerCase()
-            const password = document.getElementById('password').value.trim()
-            if (usuario === 'pelon' && password === 'PL909') {
-                document.getElementById('login-screen').classList.add('hidden')
-                document.getElementById('app-screen').classList.remove('hidden')
-                cargarDatos()
-                cambiarTab(0)
+            const user = document.getElementById('username').value.trim().toLowerCase();
+            const pass = document.getElementById('password').value;
+            if (user === 'pelon' && pass === 'PL909') {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('app-screen').classList.remove('hidden');
+                cargarDatos();
+                cambiarTab(0);
             } else {
-                const error = document.getElementById('login-error')
-                error.classList.remove('hidden')
-                setTimeout(() => error.classList.add('hidden'), 3000)
+                const error = document.getElementById('login-error');
+                error.classList.remove('hidden');
+                setTimeout(() => error.classList.add('hidden'), 3000);
             }
         }
 
         function cerrarSesion() {
             if (confirm('¿Cerrar sesión?')) {
-                document.getElementById('app-screen').classList.add('hidden')
-                document.getElementById('login-screen').classList.remove('hidden')
-                document.getElementById('password').value = ''
+                document.getElementById('app-screen').classList.add('hidden');
+                document.getElementById('login-screen').classList.remove('hidden');
             }
         }
 
-        // ==================== CARGAR / GUARDAR ====================
         function cargarDatos() {
-            const inv = localStorage.getItem('inventario_llantera_pelon')
-            if (inv) inventario = JSON.parse(inv)
-            else {
-                inventario = [
-                    { id: 1, nombre: "Llanta Goodyear 205/55 R16", categoria: "Llantas", cantidad: 18, precio: 1250, tamano: "205/55 R16" },
-                    { id: 2, nombre: "Rin de aluminio 16\" Negro", categoria: "Rines", cantidad: 8, precio: 1850, tamano: "16\"" },
-                    { id: 3, nombre: "Aceite Mobil 5W30 1L", categoria: "Aceites y Lubricantes", cantidad: 42, precio: 185, tamano: "" },
-                    { id: 4, nombre: "Válvula de llanta (pack x4)", categoria: "Accesorios", cantidad: 15, precio: 120, tamano: "" }
-                ]
-                guardarInventario()
-            }
+            const inv = localStorage.getItem('inventario_llantera_pelon');
+            inventario = inv ? JSON.parse(inv) : [{ id: 1, nombre: "Llanta Goodyear 205/55 R16", categoria: "Llantas", cantidad: 18, precio: 1250, tamano: "205/55 R16" }];
+            guardarInventario();
 
-            const mov = localStorage.getItem('movimientos_llantera_pelon')
-            if (mov) movimientos = JSON.parse(mov)
-            else movimientos = []
-
-            renderizarTabla()
+            const mov = localStorage.getItem('movimientos_llantera_pelon');
+            movimientos = mov ? JSON.parse(mov) : [];
         }
 
-        function guardarInventario() {
-            localStorage.setItem('inventario_llantera_pelon', JSON.stringify(inventario))
-        }
+        function guardarInventario() { localStorage.setItem('inventario_llantera_pelon', JSON.stringify(inventario)); }
+        function guardarMovimientos() { localStorage.setItem('movimientos_llantera_pelon', JSON.stringify(movimientos)); }
 
-        function guardarMovimientos() {
-            localStorage.setItem('movimientos_llantera_pelon', JSON.stringify(movimientos))
-        }
-
-        // ==================== TABS ====================
         function cambiarTab(tab) {
-            tabActual = tab
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
-            document.getElementById('tab-btn-' + tab).classList.add('active')
-
-            document.getElementById('tab-inventario').classList.add('hidden')
-            document.getElementById('tab-movimientos').classList.add('hidden')
-            document.getElementById('tab-estadisticas').classList.add('hidden')
-
-            if (tab === 0) {
-                document.getElementById('tab-inventario').classList.remove('hidden')
-                renderizarTabla()
-            } else if (tab === 1) {
-                document.getElementById('tab-movimientos').classList.remove('hidden')
-                renderizarMovimientos()
-            } else if (tab === 2) {
-                document.getElementById('tab-estadisticas').classList.remove('hidden')
-                calcularEstadisticas()
-            }
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-btn-' + tab).classList.add('active');
+            document.getElementById('tab-inventario').classList.add('hidden');
+            document.getElementById('tab-movimientos').classList.add('hidden');
+            document.getElementById('tab-estadisticas').classList.add('hidden');
+            if (tab === 0) { document.getElementById('tab-inventario').classList.remove('hidden'); renderizarTabla(); }
+            if (tab === 1) { document.getElementById('tab-movimientos').classList.remove('hidden'); renderizarMovimientos(); }
+            if (tab === 2) { document.getElementById('tab-estadisticas').classList.remove('hidden'); calcularEstadisticas(); }
         }
 
-        // ==================== INVENTARIO ====================
-        function renderizarTabla(datos = inventario) {
-            const tbody = document.getElementById('tabla-inventario')
-            tbody.innerHTML = ''
-            let totalValor = 0
-
-            datos.forEach(item => {
-                const valorTotal = item.cantidad * item.precio
-                totalValor += valorTotal
-                const fila = document.createElement('tr')
-                fila.className = `border-b border-zinc-800 last:border-none ${item.cantidad < 5 ? 'stock-bajo' : ''}`
+        function renderizarTabla() {
+            const tbody = document.getElementById('tabla-inventario');
+            tbody.innerHTML = '';
+            inventario.forEach(item => {
+                const valor = item.cantidad * item.precio;
+                const fila = document.createElement('tr');
+                fila.className = item.cantidad < 5 ? 'stock-bajo' : '';
                 fila.innerHTML = `
-                    <td class="py-6 px-8 font-mono text-yellow-400">#${String(item.id).padStart(3, '0')}</td>
-                    <td class="py-6 px-8"><div class="font-medium">${item.nombre}</div>${item.tamano ? `<div class="text-xs text-zinc-500">${item.tamano}</div>` : ''}</td>
-                    <td class="py-6 px-8"><span class="inline-block px-4 py-1 bg-zinc-800 text-xs rounded-3xl">${item.categoria}</span></td>
-                    <td class="py-6 px-8 text-right font-semibold ${item.cantidad < 5 ? 'text-red-400' : 'text-emerald-400'}">${item.cantidad} unidades</td>
-                    <td class="py-6 px-8 text-right font-medium">$${parseFloat(item.precio).toFixed(2)}</td>
-                    <td class="py-6 px-8 text-right font-bold">$${valorTotal.toFixed(2)}</td>
+                    <td class="py-6 px-8 font-mono text-yellow-400">#${String(item.id).padStart(3,'0')}</td>
+                    <td class="py-6 px-8">${item.nombre}</td>
+                    <td class="py-6 px-8">${item.categoria}</td>
+                    <td class="py-6 px-8 text-right">${item.cantidad} unidades</td>
+                    <td class="py-6 px-8 text-right">$${item.precio.toFixed(2)}</td>
+                    <td class="py-6 px-8 text-right font-bold">$${valor.toFixed(2)}</td>
                     <td class="py-6 px-8">
-                        <div class="flex gap-3 justify-end">
-                            <button onclick="editarProducto(${item.id})" class="text-amber-400 hover:text-amber-300"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="eliminarProducto(${item.id})" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-trash"></i></button>
-                        </div>
+                        <button onclick="editarProducto(${item.id})" class="text-amber-400 mr-4"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="eliminarProducto(${item.id})" class="text-red-400"><i class="fa-solid fa-trash"></i></button>
                     </td>
-                `
-                tbody.appendChild(fila)
-            })
-
-            document.getElementById('total-productos').innerHTML = `${datos.length} productos • <span class="font-bold text-emerald-400">$${totalValor.toFixed(2)}</span> en inventario`
+                `;
+                tbody.appendChild(fila);
+            });
         }
 
         function filtrarTabla() {
-            const termino = document.getElementById('buscador').value.toLowerCase().trim()
-            if (!termino) return renderizarTabla(inventario)
-            const filtrados = inventario.filter(item => 
-                item.nombre.toLowerCase().includes(termino) || 
-                item.categoria.toLowerCase().includes(termino) || 
-                (item.tamano && item.tamano.toLowerCase().includes(termino))
-            )
-            renderizarTabla(filtrados)
+            const term = document.getElementById('buscador').value.toLowerCase().trim();
+            const filtrados = inventario.filter(p => p.nombre.toLowerCase().includes(term));
+            const tbody = document.getElementById('tabla-inventario');
+            tbody.innerHTML = '';
+            filtrados.forEach(item => {
+                const valor = item.cantidad * item.precio;
+                const fila = document.createElement('tr');
+                fila.className = item.cantidad < 5 ? 'stock-bajo' : '';
+                fila.innerHTML = `
+                    <td class="py-6 px-8 font-mono text-yellow-400">#${String(item.id).padStart(3,'0')}</td>
+                    <td class="py-6 px-8">${item.nombre}</td>
+                    <td class="py-6 px-8">${item.categoria}</td>
+                    <td class="py-6 px-8 text-right">${item.cantidad} unidades</td>
+                    <td class="py-6 px-8 text-right">$${item.precio.toFixed(2)}</td>
+                    <td class="py-6 px-8 text-right font-bold">$${valor.toFixed(2)}</td>
+                    <td class="py-6 px-8">
+                        <button onclick="editarProducto(${item.id})" class="text-amber-400 mr-4"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="eliminarProducto(${item.id})" class="text-red-400"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(fila);
+            });
         }
 
         function abrirModalAgregar() {
-            editandoId = null
-            document.getElementById('modal-producto-titulo').textContent = 'Nuevo Producto'
-            document.getElementById('btn-guardar-producto').textContent = 'GUARDAR PRODUCTO'
-            document.getElementById('nombre').value = ''
-            document.getElementById('categoria').value = 'Llantas'
-            document.getElementById('cantidad').value = '1'
-            document.getElementById('precio').value = '0'
-            document.getElementById('tamano').value = ''
-            document.getElementById('modal-producto').classList.remove('hidden')
+            editandoId = null;
+            document.getElementById('modal-producto-titulo').textContent = 'Nuevo Producto';
+            document.getElementById('nombre').value = '';
+            document.getElementById('categoria').value = 'Llantas';
+            document.getElementById('cantidad').value = '1';
+            document.getElementById('precio').value = '0';
+            document.getElementById('tamano').value = '';
+            document.getElementById('modal-producto').classList.remove('hidden');
         }
 
-        function cerrarModalProducto() {
-            document.getElementById('modal-producto').classList.add('hidden')
-        }
+        function cerrarModalProducto() { document.getElementById('modal-producto').classList.add('hidden'); }
 
         function guardarProducto() {
-            const nombre = document.getElementById('nombre').value.trim()
-            if (!nombre) return alert('¡El nombre es obligatorio!')
-            const categoria = document.getElementById('categoria').value
-            const cantidad = parseInt(document.getElementById('cantidad').value) || 0
-            const precio = parseFloat(document.getElementById('precio').value) || 0
-            const tamano = document.getElementById('tamano').value.trim()
+            const nombre = document.getElementById('nombre').value.trim();
+            if (!nombre) return alert('El nombre es obligatorio');
+            const cat = document.getElementById('categoria').value;
+            const cant = parseInt(document.getElementById('cantidad').value) || 0;
+            const prec = parseFloat(document.getElementById('precio').value) || 0;
+            const tam = document.getElementById('tamano').value;
 
             if (editandoId !== null) {
-                const p = inventario.find(x => x.id === editandoId)
-                if (p) {
-                    p.nombre = nombre
-                    p.categoria = categoria
-                    p.cantidad = cantidad
-                    p.precio = precio
-                    p.tamano = tamano
-                }
+                const p = inventario.find(x => x.id === editandoId);
+                p.nombre = nombre; p.categoria = cat; p.cantidad = cant; p.precio = prec; p.tamano = tam;
             } else {
-                const nuevoId = inventario.length ? Math.max(...inventario.map(p => p.id)) + 1 : 1
-                inventario.push({ id: nuevoId, nombre, categoria, cantidad, precio, tamano })
+                const nuevoId = inventario.length ? Math.max(...inventario.map(x => x.id)) + 1 : 1;
+                inventario.push({id: nuevoId, nombre, categoria: cat, cantidad: cant, precio: prec, tamano: tam});
             }
-            guardarInventario()
-            renderizarTabla()
-            cerrarModalProducto()
+            guardarInventario();
+            renderizarTabla();
+            cerrarModalProducto();
         }
 
         function editarProducto(id) {
-            const producto = inventario.find(p => p.id === id)
-            if (!producto) return
-            editandoId = id
-            document.getElementById('modal-producto-titulo').textContent = 'Editar Producto'
-            document.getElementById('btn-guardar-producto').textContent = 'GUARDAR CAMBIOS'
-            document.getElementById('nombre').value = producto.nombre
-            document.getElementById('categoria').value = producto.categoria
-            document.getElementById('cantidad').value = producto.cantidad
-            document.getElementById('precio').value = producto.precio
-            document.getElementById('tamano').value = producto.tamano || ''
-            document.getElementById('modal-producto').classList.remove('hidden')
+            const p = inventario.find(x => x.id === id);
+            editandoId = id;
+            document.getElementById('modal-producto-titulo').textContent = 'Editar Producto';
+            document.getElementById('nombre').value = p.nombre;
+            document.getElementById('categoria').value = p.categoria;
+            document.getElementById('cantidad').value = p.cantidad;
+            document.getElementById('precio').value = p.precio;
+            document.getElementById('tamano').value = p.tamano || '';
+            document.getElementById('modal-producto').classList.remove('hidden');
         }
 
         function eliminarProducto(id) {
-            if (!confirm('¿Eliminar este producto?')) return
-            inventario = inventario.filter(p => p.id !== id)
-            guardarInventario()
-            renderizarTabla()
+            if (confirm('¿Eliminar este producto?')) {
+                inventario = inventario.filter(x => x.id !== id);
+                guardarInventario();
+                renderizarTabla();
+            }
         }
 
-        // ==================== MOVIMIENTOS ====================
         function abrirModalMovimiento() {
-            tipoMovActual = 'venta'
-            actualizarTipoUI()
-            llenarSelectProductos()
-            document.getElementById('mov-cantidad').value = '1'
-            document.getElementById('mov-precio').value = '0'
-            document.getElementById('mov-fecha').value = new Date().toISOString().slice(0,10)
-            document.getElementById('modal-movimiento').classList.remove('hidden')
+            tipoMovActual = 'venta';
+            document.getElementById('btn-venta').classList.add('border-emerald-500','text-emerald-400');
+            document.getElementById('btn-compra').classList.remove('border-emerald-500','text-emerald-400');
+            document.getElementById('label-precio').textContent = 'Precio de Venta';
+            llenarSelectProductos();
+            document.getElementById('mov-cantidad').value = '1';
+            document.getElementById('mov-precio').value = '0';
+            document.getElementById('mov-fecha').value = new Date().toISOString().slice(0,10);
+            document.getElementById('modal-movimiento').classList.remove('hidden');
         }
 
-        function cerrarModalMovimiento() {
-            document.getElementById('modal-movimiento').classList.add('hidden')
-        }
+        function cerrarModalMovimiento() { document.getElementById('modal-movimiento').classList.add('hidden'); }
 
         function seleccionarTipo(tipo) {
-            tipoMovActual = tipo
-            actualizarTipoUI()
-        }
-
-        function actualizarTipoUI() {
-            const btnVenta = document.getElementById('btn-venta')
-            const btnCompra = document.getElementById('btn-compra')
-            const labelPrecio = document.getElementById('label-precio')
-
-            if (tipoMovActual === 'venta') {
-                btnVenta.classList.add('border-emerald-500', 'text-emerald-400')
-                btnCompra.classList.remove('border-emerald-500', 'text-emerald-400')
-                labelPrecio.textContent = 'Precio de Venta'
+            tipoMovActual = tipo;
+            if (tipo === 'venta') {
+                document.getElementById('btn-venta').classList.add('border-emerald-500','text-emerald-400');
+                document.getElementById('btn-compra').classList.remove('border-emerald-500','text-emerald-400');
+                document.getElementById('label-precio').textContent = 'Precio de Venta';
             } else {
-                btnCompra.classList.add('border-emerald-500', 'text-emerald-400')
-                btnVenta.classList.remove('border-emerald-500', 'text-emerald-400')
-                labelPrecio.textContent = 'Precio de Compra'
+                document.getElementById('btn-compra').classList.add('border-emerald-500','text-emerald-400');
+                document.getElementById('btn-venta').classList.remove('border-emerald-500','text-emerald-400');
+                document.getElementById('label-precio').textContent = 'Precio de Compra';
             }
         }
 
         function llenarSelectProductos() {
-            const select = document.getElementById('producto-select')
-            select.innerHTML = '<option value="">Selecciona un producto...</option>'
+            const select = document.getElementById('producto-select');
+            select.innerHTML = '<option value="">Selecciona un producto...</option>';
             inventario.forEach(p => {
-                const opt = document.createElement('option')
-                opt.value = p.id
-                opt.textContent = `${p.nombre} (${p.cantidad} unidades)`
-                select.appendChild(opt)
-            })
+                const opt = document.createElement('option');
+                opt.value = p.id;
+                opt.textContent = p.nombre;
+                select.appendChild(opt);
+            });
         }
 
         function guardarMovimiento() {
-            const productoId = parseInt(document.getElementById('producto-select').value)
-            const cantidad = parseInt(document.getElementById('mov-cantidad').value)
-            const precio = parseFloat(document.getElementById('mov-precio').value)
-            const fecha = document.getElementById('mov-fecha').value
+            const prodId = parseInt(document.getElementById('producto-select').value);
+            const cant = parseInt(document.getElementById('mov-cantidad').value);
+            const precio = parseFloat(document.getElementById('mov-precio').value);
+            const fecha = document.getElementById('mov-fecha').value;
 
-            if (!productoId || !cantidad || !precio) return alert('Completa todos los campos')
+            if (!prodId || !cant || !precio) return alert('Completa todos los campos');
 
-            const producto = inventario.find(p => p.id === productoId)
-            if (!producto) return alert('Producto no encontrado')
+            const producto = inventario.find(p => p.id === prodId);
+            if (!producto) return;
 
-            const total = cantidad * precio
-            const nombre = producto.nombre
+            if (tipoMovActual === 'venta' && cant > producto.cantidad) return alert('No hay suficiente stock');
 
-            if (tipoMovActual === 'venta') {
-                if (cantidad > producto.cantidad) return alert('¡No hay suficiente stock!')
-                producto.cantidad -= cantidad
-            } else {
-                producto.cantidad += cantidad
-            }
+            if (tipoMovActual === 'venta') producto.cantidad -= cant;
+            else producto.cantidad += cant;
 
             movimientos.unshift({
                 id: Date.now(),
                 fecha: fecha,
                 tipo: tipoMovActual,
-                producto_id: productoId,
-                nombre: nombre,
-                cantidad: cantidad,
+                producto_id: prodId,
+                nombre: producto.nombre,
+                cantidad: cant,
                 precio: precio,
-                total: total
-            })
+                total: cant * precio
+            });
 
-            guardarInventario()
-            guardarMovimientos()
-
-            cerrarModalMovimiento()
-            renderizarTabla()
-            if (tabActual === 1) renderizarMovimientos()
-            if (tabActual === 2) calcularEstadisticas()
+            guardarInventario();
+            guardarMovimientos();
+            cerrarModalMovimiento();
+            renderizarTabla();
+            if (!document.getElementById('tab-movimientos').classList.contains('hidden')) renderizarMovimientos();
+            if (!document.getElementById('tab-estadisticas').classList.contains('hidden')) calcularEstadisticas();
         }
 
         function renderizarMovimientos() {
-            const tbody = document.getElementById('tabla-movimientos')
-            tbody.innerHTML = ''
-
-            const sorted = [...movimientos].sort((a,b) => new Date(b.fecha) - new Date(a.fecha))
-
+            const tbody = document.getElementById('tabla-movimientos');
+            tbody.innerHTML = '';
+            const sorted = [...movimientos].sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
             sorted.forEach(m => {
-                const fila = document.createElement('tr')
-                fila.className = m.tipo === 'venta' ? 'mov-venta' : 'mov-compra'
+                const fila = document.createElement('tr');
                 fila.innerHTML = `
                     <td class="py-6 px-8">${m.fecha}</td>
-                    <td class="py-6 px-8">
-                        <span class="inline-flex items-center gap-2 px-4 py-1 rounded-3xl ${m.tipo === 'venta' ? 'bg-emerald-900 text-emerald-300' : 'bg-blue-900 text-blue-300'}">
-                            <i class="fa-solid ${m.tipo === 'venta' ? 'fa-arrow-down' : 'fa-arrow-up'}"></i>
-                            ${m.tipo.toUpperCase()}
-                        </span>
-                    </td>
-                    <td class="py-6 px-8 font-medium">${m.nombre}</td>
-                    <td class="py-6 px-8 text-right font-semibold">${m.cantidad} unidades</td>
-                    <td class="py-6 px-8 text-right">$${parseFloat(m.precio).toFixed(2)}</td>
+                    <td class="py-6 px-8"><span class="px-4 py-1 rounded-3xl ${m.tipo==='venta'?'bg-emerald-900 text-emerald-300':'bg-blue-900 text-blue-300'}">${m.tipo.toUpperCase()}</span></td>
+                    <td class="py-6 px-8">${m.nombre}</td>
+                    <td class="py-6 px-8 text-right">${m.cantidad} unidades</td>
+                    <td class="py-6 px-8 text-right">$${m.precio.toFixed(2)}</td>
                     <td class="py-6 px-8 text-right font-bold">$${m.total.toFixed(2)}</td>
-                `
-                tbody.appendChild(fila)
-            })
+                    <td class="py-6 px-8">
+                        <button onclick="eliminarMovimiento(${m.id})" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(fila);
+            });
         }
 
-        // ==================== ESTADÍSTICAS ====================
-        function calcularEstadisticas() {
-            let ingresos = 0
-            let gastos = 0
-            movimientos.forEach(m => {
-                if (m.tipo === 'venta') ingresos += m.total
-                else gastos += m.total
-            })
-            const ganancia = ingresos - gastos
-
-            let valorInventario = 0
-            inventario.forEach(p => valorInventario += p.cantidad * p.precio)
-
-            document.getElementById('stat-ventas').textContent = '$' + ingresos.toFixed(2)
-            document.getElementById('stat-compras').textContent = '$' + gastos.toFixed(2)
-            document.getElementById('stat-ganancia').textContent = '$' + ganancia.toFixed(2)
-            document.getElementById('stat-inventario').textContent = '$' + valorInventario.toFixed(2)
-
-            // Top vendidos
-            const vendidosMap = {}
-            movimientos.filter(m => m.tipo === 'venta').forEach(m => {
-                if (!vendidosMap[m.nombre]) vendidosMap[m.nombre] = 0
-                vendidosMap[m.nombre] += m.cantidad
-            })
-
-            const topArray = Object.entries(vendidosMap)
-                .sort((a,b) => b[1] - a[1])
-                .slice(0, 5)
-
-            let html = '<div class="divide-y divide-zinc-800">'
-            if (topArray.length === 0) html += '<p class="p-8 text-center text-zinc-500">Aún no hay ventas registradas</p>'
-            else {
-                topArray.forEach(([nombre, cant]) => {
-                    html += `
-                        <div class="flex justify-between items-center px-8 py-6">
-                            <div class="font-medium">${nombre}</div>
-                            <div class="text-emerald-400 font-semibold">${cant} unidades vendidas</div>
-                        </div>
-                    `
-                })
+        function eliminarMovimiento(id) {
+            if (!confirm('¿Eliminar este movimiento? El stock se corregirá automáticamente.')) return;
+            const mov = movimientos.find(m => m.id === id);
+            if (!mov) return;
+            const prod = inventario.find(p => p.id === mov.producto_id);
+            if (prod) {
+                if (mov.tipo === 'venta') prod.cantidad += mov.cantidad;
+                else prod.cantidad -= mov.cantidad;
             }
-            html += '</div>'
-            document.getElementById('top-vendidos').innerHTML = html
+            movimientos = movimientos.filter(m => m.id !== id);
+            guardarInventario();
+            guardarMovimientos();
+            renderizarTabla();
+            renderizarMovimientos();
+            calcularEstadisticas();
         }
 
-        function mostrarEstadisticasRapidas() {
-            let totalUnidadesVendidas = 0
-            movimientos.filter(m => m.tipo === 'venta').forEach(m => totalUnidadesVendidas += m.cantidad)
+        function calcularEstadisticas() {
+            let ventas = 0, compras = 0;
+            movimientos.forEach(m => m.tipo === 'venta' ? ventas += m.total : compras += m.total);
+            const ganancia = ventas - compras;
+            let valorInv = 0;
+            inventario.forEach(p => valorInv += p.cantidad * p.precio);
 
-            alert(`📊 ESTADÍSTICAS RÁPIDAS\n\n` +
-                  `Ventas totales: $${movimientos.filter(m => m.tipo === 'venta').reduce((a,m) => a + m.total, 0).toFixed(2)}\n` +
-                  `Compras totales: $${movimientos.filter(m => m.tipo === 'compra').reduce((a,m) => a + m.total, 0).toFixed(2)}\n` +
-                  `Unidades vendidas: ${totalUnidadesVendidas}\n` +
-                  `Productos en stock: ${inventario.length}`)
+            document.getElementById('stat-ventas').textContent = '$' + ventas.toFixed(2);
+            document.getElementById('stat-compras').textContent = '$' + compras.toFixed(2);
+            document.getElementById('stat-ganancia').textContent = '$' + ganancia.toFixed(2);
+            document.getElementById('stat-inventario').textContent = '$' + valorInv.toFixed(2);
+
+            const top = {};
+            movimientos.filter(m => m.tipo === 'venta').forEach(m => {
+                top[m.nombre] = (top[m.nombre] || 0) + m.cantidad;
+            });
+            const sorted = Object.entries(top).sort((a,b) => b[1] - a[1]).slice(0,5);
+            let html = sorted.length ? '' : 'Aún no hay ventas registradas';
+            sorted.forEach(([nombre, cant]) => {
+                html += `<div class="flex justify-between py-3 border-b border-zinc-700 last:border-none"><span>${nombre}</span><span class="text-emerald-400">${cant} unidades</span></div>`;
+            });
+            document.getElementById('top-vendidos').innerHTML = html || 'Aún no hay ventas registradas';
         }
 
-        // ==================== EXPORTAR EXCEL ====================
         function exportarInventarioExcel() {
-            if (inventario.length === 0) return alert('No hay productos')
-            // (mismo código profesional que antes - se mantiene)
-            const datosOrdenados = [...inventario].sort((a, b) => a.id - b.id)
-            let totalValor = 0
-            const rows = datosOrdenados.map(item => {
-                const valor = item.cantidad * item.precio
-                totalValor += valor
-                return [item.id, item.nombre, item.categoria, item.cantidad, item.precio, item.tamano || '', valor]
-            })
-
-            const excelData = [
-                ["LLANTERA PELÓN - INVENTARIO", "", "", "", "", "", ""],
-                [`Fecha: ${new Date().toLocaleDateString('es-MX')}`, "", "", "", "", "", ""],
-                [],
-                ["ID", "Nombre del Producto", "Categoría", "Cantidad", "Precio Unitario", "Tamaño", "Valor Total"],
-                ...rows,
-                [],
-                ["", "", "", "TOTAL INVENTARIO", "", "", totalValor]
-            ]
-
-            const ws = XLSX.utils.aoa_to_sheet(excelData)
-            ws['!cols'] = [{wch:8},{wch:55},{wch:22},{wch:15},{wch:18},{wch:18},{wch:20}]
-            const wb = XLSX.utils.book_new()
-            XLSX.utils.book_append_sheet(wb, ws, "Inventario")
-            XLSX.writeFile(wb, `inventario_llantera_pelon_${new Date().toISOString().slice(0,10)}.xlsx`)
+            if (inventario.length === 0) return alert('No hay productos');
+            const data = [["LLANTERA PELÓN - INVENTARIO","","","","","",""],["Fecha: " + new Date().toLocaleDateString('es-MX'),"","","","","",""],[],["ID","Producto","Categoría","Cantidad","Precio Unitario","Tamaño","Valor Total"],...inventario.map(p => [p.id, p.nombre, p.categoria, p.cantidad, p.precio, p.tamano || '', p.cantidad * p.precio])];
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Inventario");
+            XLSX.writeFile(wb, `inventario_llantera_pelon_${new Date().toISOString().slice(0,10)}.xlsx`);
         }
 
         function exportarMovimientosExcel() {
-            if (movimientos.length === 0) return alert('No hay movimientos')
-            const sorted = [...movimientos].sort((a,b) => new Date(b.fecha) - new Date(a.fecha))
-            const rows = sorted.map(m => [m.fecha, m.tipo.toUpperCase(), m.nombre, m.cantidad, m.precio, m.total])
-
-            const excelData = [
-                ["LLANTERA PELÓN - MOVIMIENTOS", "", "", "", "", ""],
-                [`Exportado: ${new Date().toLocaleDateString('es-MX')}`, "", "", "", "", ""],
-                [],
-                ["Fecha", "Tipo", "Producto", "Cantidad", "Precio", "Total"],
-                ...rows
-            ]
-
-            const ws = XLSX.utils.aoa_to_sheet(excelData)
-            ws['!cols'] = [{wch:12},{wch:12},{wch:50},{wch:12},{wch:15},{wch:18}]
-            const wb = XLSX.utils.book_new()
-            XLSX.utils.book_append_sheet(wb, ws, "Movimientos")
-            XLSX.writeFile(wb, `movimientos_llantera_pelon_${new Date().toISOString().slice(0,10)}.xlsx`)
+            if (movimientos.length === 0) return alert('No hay movimientos');
+            const data = [["LLANTERA PELÓN - MOVIMIENTOS","","","","",""],["Exportado: " + new Date().toLocaleDateString('es-MX'),"","","","",""],[],["Fecha","Tipo","Producto","Cantidad","Precio","Total"],...movimientos.map(m => [m.fecha, m.tipo.toUpperCase(), m.nombre, m.cantidad, m.precio, m.total])];
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Movimientos");
+            XLSX.writeFile(wb, `movimientos_llantera_pelon_${new Date().toISOString().slice(0,10)}.xlsx`);
         }
 
-        // ==================== INICIO ====================
-        window.onload = () => {
-            // Todo listo
-        }
+        window.onload = () => {};
     </script>
 </body>
 </html>

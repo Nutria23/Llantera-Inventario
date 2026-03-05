@@ -34,18 +34,46 @@
             transform: scale(1.05);
             box-shadow: 0 10px 15px -3px rgb(234 179 8 / 0.4);
         }
+
+        /* ── RESPONSIVE: tabla con scroll horizontal en móvil ── */
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .table-wrapper table {
+            min-width: 640px;
+        }
+
+        /* ── RESPONSIVE: pestañas en móvil ── */
+        @media (max-width: 640px) {
+            .tab-btn {
+                padding: 0.75rem 0.85rem;
+                font-size: 0.78rem;
+            }
+            .tab-btn:hover {
+                padding-left: 0.85rem;
+                padding-right: 0.85rem;
+            }
+        }
+
+        /* ── RESPONSIVE: cards de estadísticas apiladas en móvil ── */
+        @media (max-width: 768px) {
+            .stat-card {
+                padding: 1rem;
+            }
+        }
     </style>
 </head>
 <body class="bg-zinc-950 text-white">
 
     <!-- LOGIN -->
-    <div id="login-screen" class="min-h-screen flex items-center justify-center bg-zinc-900">
-        <div class="bg-zinc-800 p-10 rounded-3xl shadow-2xl w-full max-w-md border border-zinc-700">
+    <div id="login-screen" class="min-h-screen flex items-center justify-center bg-zinc-900 px-4">
+        <div class="bg-zinc-800 p-8 sm:p-10 rounded-3xl shadow-2xl w-full max-w-md border border-zinc-700">
             <div class="text-center mb-8">
-                <div class="mx-auto w-24 h-24 bg-yellow-500 rounded-2xl flex items-center justify-center shadow-inner">
-                    <i class="fa-solid fa-car-side text-5xl text-zinc-900"></i>
+                <div class="mx-auto w-20 h-20 sm:w-24 sm:h-24 bg-yellow-500 rounded-2xl flex items-center justify-center shadow-inner">
+                    <i class="fa-solid fa-car-side text-4xl sm:text-5xl text-zinc-900"></i>
                 </div>
-                <h1 class="text-4xl font-bold mt-6 text-yellow-400">LLANTERA PELÓN</h1>
+                <h1 class="text-3xl sm:text-4xl font-bold mt-6 text-yellow-400">LLANTERA PELÓN</h1>
                 <p class="text-zinc-400 mt-2">Control + Ventas</p>
             </div>
             <div class="space-y-6">
@@ -74,24 +102,24 @@
     <!-- APP -->
     <div id="app-screen" class="hidden min-h-screen bg-zinc-950">
         <header class="bg-zinc-900 border-b border-zinc-800 sticky top-0 z-50">
-            <div class="max-w-screen-2xl mx-auto px-8 py-5 flex items-center justify-between">
-                <div class="flex items-center gap-x-4">
-                    <div class="w-10 h-10 bg-yellow-500 rounded-2xl flex items-center justify-center">
-                        <i class="fa-solid fa-car-side text-2xl text-zinc-900"></i>
+            <div class="max-w-screen-2xl mx-auto px-4 sm:px-8 py-4 sm:py-5 flex items-center justify-between">
+                <div class="flex items-center gap-x-3 sm:gap-x-4">
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 bg-yellow-500 rounded-2xl flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-car-side text-xl sm:text-2xl text-zinc-900"></i>
                     </div>
                     <div>
-                        <h1 class="text-2xl font-bold text-yellow-400">LLANTERA PELÓN</h1>
-                        <p class="text-xs text-zinc-500 -mt-1">Control + Ventas</p>
+                        <h1 class="text-lg sm:text-2xl font-bold text-yellow-400 leading-tight">LLANTERA PELÓN</h1>
+                        <p class="text-[10px] sm:text-xs text-zinc-500 -mt-0.5">Control + Ventas</p>
                     </div>
                 </div>
-                <div class="flex items-center gap-x-6">
-                    <div onclick="cerrarSesion()" class="flex items-center gap-x-2 text-zinc-400 hover:text-white cursor-pointer transition">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                        <span class="text-sm font-medium">Cerrar sesión</span>
+                <div class="flex items-center gap-x-3 sm:gap-x-6">
+                    <div onclick="cerrarSesion()" class="flex items-center gap-x-1 sm:gap-x-2 text-zinc-400 hover:text-white cursor-pointer transition">
+                        <i class="fa-solid fa-right-from-bracket text-sm sm:text-base"></i>
+                        <span class="hidden sm:block text-sm font-medium">Cerrar sesión</span>
                     </div>
-                    <div class="bg-zinc-800 px-5 py-2 rounded-3xl flex items-center gap-x-3">
-                        <div class="w-8 h-8 bg-emerald-400 rounded-2xl flex items-center justify-center text-xs font-bold text-zinc-900">P</div>
-                        <div>
+                    <div class="bg-zinc-800 px-3 sm:px-5 py-2 rounded-3xl flex items-center gap-x-2 sm:gap-x-3">
+                        <div class="w-7 h-7 sm:w-8 sm:h-8 bg-emerald-400 rounded-2xl flex items-center justify-center text-xs font-bold text-zinc-900 flex-shrink-0">P</div>
+                        <div class="hidden sm:block">
                             <p class="text-sm font-semibold text-white">Pelón</p>
                             <p class="text-[10px] text-emerald-400 -mt-0.5">Administrador</p>
                         </div>
@@ -100,41 +128,46 @@
             </div>
         </header>
 
-        <div class="max-w-screen-2xl mx-auto px-8 py-8">
-            <div class="flex border-b border-zinc-700 mb-8">
-                <button onclick="cambiarTab(0)" id="tab-btn-0" class="tab-btn active px-10 py-4 text-lg">📦 Inventario</button>
-                <button onclick="cambiarTab(1)" id="tab-btn-1" class="tab-btn px-10 py-4 text-lg">📋 Movimientos</button>
-                <button onclick="cambiarTab(2)" id="tab-btn-2" class="tab-btn px-10 py-4 text-lg">📊 Estadísticas</button>
+        <div class="max-w-screen-2xl mx-auto px-4 sm:px-8 py-5 sm:py-8">
+            <!-- TABS -->
+            <div class="flex border-b border-zinc-700 mb-6 sm:mb-8 overflow-x-auto">
+                <button onclick="cambiarTab(0)" id="tab-btn-0" class="tab-btn active px-4 sm:px-10 py-3 sm:py-4 text-sm sm:text-lg whitespace-nowrap">📦 Inventario</button>
+                <button onclick="cambiarTab(1)" id="tab-btn-1" class="tab-btn px-4 sm:px-10 py-3 sm:py-4 text-sm sm:text-lg whitespace-nowrap">📋 Movimientos</button>
+                <button onclick="cambiarTab(2)" id="tab-btn-2" class="tab-btn px-4 sm:px-10 py-3 sm:py-4 text-sm sm:text-lg whitespace-nowrap">📊 Estadísticas</button>
             </div>
 
             <!-- TAB INVENTARIO -->
             <div id="tab-inventario">
-                <div class="flex flex-col md:flex-row gap-6 mb-8">
-                    <div class="flex-1 relative">
-                        <i class="fa-solid fa-magnifying-glass absolute left-6 top-1/2 -translate-y-1/2 text-zinc-500"></i>
-                        <input id="buscador" onkeyup="filtrarTabla()" type="text" class="w-full bg-zinc-900 border border-zinc-700 focus:border-yellow-500 rounded-3xl pl-14 py-4 text-white placeholder-zinc-500 focus:outline-none" placeholder="Buscar por nombre...">
+                <div class="flex flex-col gap-3 sm:gap-6 mb-6 sm:mb-8">
+                    <!-- Buscador -->
+                    <div class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-5 top-1/2 -translate-y-1/2 text-zinc-500"></i>
+                        <input id="buscador" onkeyup="filtrarTabla()" type="text" class="w-full bg-zinc-900 border border-zinc-700 focus:border-yellow-500 rounded-3xl pl-13 py-3.5 sm:py-4 text-white placeholder-zinc-500 focus:outline-none" placeholder="Buscar por nombre..." style="padding-left:3.2rem;">
                     </div>
-                    <button onclick="abrirModalAgregar()" class="bg-yellow-500 hover:bg-yellow-400 transition text-zinc-900 font-semibold px-10 rounded-3xl flex items-center gap-x-3 shadow-lg shadow-yellow-500/30">
-                        <i class="fa-solid fa-plus"></i><span>NUEVO PRODUCTO</span>
-                    </button>
-                    <button onclick="abrirModalMovimiento()" class="bg-emerald-600 hover:bg-emerald-500 transition text-white font-semibold px-10 rounded-3xl flex items-center gap-x-3 shadow-lg">
-                        <i class="fa-solid fa-exchange-alt"></i><span>NUEVO MOVIMIENTO</span>
-                    </button>
-                    <button onclick="exportarInventarioExcel()" class="bg-zinc-800 hover:bg-zinc-700 transition border border-zinc-700 px-8 rounded-3xl flex items-center gap-x-3">
-                        <i class="fa-solid fa-file-excel"></i><span class="hidden md:block">Exportar Inventario</span>
-                    </button>
+                    <!-- Botones acción -->
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="abrirModalAgregar()" class="flex-1 sm:flex-none bg-yellow-500 hover:bg-yellow-400 transition text-zinc-900 font-semibold px-5 sm:px-10 py-3 rounded-3xl flex items-center justify-center gap-x-2 shadow-lg shadow-yellow-500/30 text-sm sm:text-base">
+                            <i class="fa-solid fa-plus"></i><span>NUEVO PRODUCTO</span>
+                        </button>
+                        <button onclick="abrirModalMovimiento()" class="flex-1 sm:flex-none bg-emerald-600 hover:bg-emerald-500 transition text-white font-semibold px-5 sm:px-10 py-3 rounded-3xl flex items-center justify-center gap-x-2 shadow-lg text-sm sm:text-base">
+                            <i class="fa-solid fa-exchange-alt"></i><span>NUEVO MOVIMIENTO</span>
+                        </button>
+                        <button onclick="exportarInventarioExcel()" class="bg-zinc-800 hover:bg-zinc-700 transition border border-zinc-700 px-5 sm:px-8 py-3 rounded-3xl flex items-center justify-center gap-x-2 text-sm sm:text-base">
+                            <i class="fa-solid fa-file-excel"></i><span class="sm:block">Exportar</span>
+                        </button>
+                    </div>
                 </div>
-                <div class="bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800">
+                <div class="bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800 table-wrapper">
                     <table class="w-full">
                         <thead>
                             <tr class="border-b border-zinc-800 bg-zinc-950">
-                                <th class="text-left py-6 px-8 font-medium text-zinc-400 text-sm">ID</th>
-                                <th class="text-left py-6 px-8 font-medium text-zinc-400 text-sm">PRODUCTO</th>
-                                <th class="text-left py-6 px-8 font-medium text-zinc-400 text-sm">CATEGORÍA</th>
-                                <th class="text-right py-6 px-8 font-medium text-zinc-400 text-sm">CANTIDAD</th>
-                                <th class="text-right py-6 px-8 font-medium text-zinc-400 text-sm">PRECIO UNIT.</th>
-                                <th class="text-right py-6 px-8 font-medium text-zinc-400 text-sm">VALOR TOTAL</th>
-                                <th class="w-28"></th>
+                                <th class="text-left py-4 sm:py-6 px-4 sm:px-8 font-medium text-zinc-400 text-xs sm:text-sm">ID</th>
+                                <th class="text-left py-4 sm:py-6 px-4 sm:px-8 font-medium text-zinc-400 text-xs sm:text-sm">PRODUCTO</th>
+                                <th class="text-left py-4 sm:py-6 px-4 sm:px-8 font-medium text-zinc-400 text-xs sm:text-sm">CATEGORÍA</th>
+                                <th class="text-right py-4 sm:py-6 px-4 sm:px-8 font-medium text-zinc-400 text-xs sm:text-sm">CANTIDAD</th>
+                                <th class="text-right py-4 sm:py-6 px-4 sm:px-8 font-medium text-zinc-400 text-xs sm:text-sm">PRECIO UNIT.</th>
+                                <th class="text-right py-4 sm:py-6 px-4 sm:px-8 font-medium text-zinc-400 text-xs sm:text-sm">VALOR TOTAL</th>
+                                <th class="w-20 sm:w-28"></th>
                             </tr>
                         </thead>
                         <tbody id="tabla-inventario" class="divide-y divide-zinc-800"></tbody>
@@ -144,17 +177,17 @@
 
             <!-- TAB MOVIMIENTOS -->
             <div id="tab-movimientos" class="hidden">
-                <div class="bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800">
+                <div class="bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800 table-wrapper">
                     <table class="w-full">
                         <thead>
                             <tr class="border-b border-zinc-800 bg-zinc-950">
-                                <th class="text-left py-6 px-8 font-medium text-zinc-400 text-sm">FECHA</th>
-                                <th class="text-left py-6 px-8 font-medium text-zinc-400 text-sm">TIPO</th>
-                                <th class="text-left py-6 px-8 font-medium text-zinc-400 text-sm">PRODUCTO</th>
-                                <th class="text-right py-6 px-8 font-medium text-zinc-400 text-sm">CANTIDAD</th>
-                                <th class="text-right py-6 px-8 font-medium text-zinc-400 text-sm">PRECIO</th>
-                                <th class="text-right py-6 px-8 font-medium text-zinc-400 text-sm">TOTAL</th>
-                                <th class="w-20"></th>
+                                <th class="text-left py-4 sm:py-6 px-4 sm:px-8 font-medium text-zinc-400 text-xs sm:text-sm">FECHA</th>
+                                <th class="text-left py-4 sm:py-6 px-4 sm:px-8 font-medium text-zinc-400 text-xs sm:text-sm">TIPO</th>
+                                <th class="text-left py-4 sm:py-6 px-4 sm:px-8 font-medium text-zinc-400 text-xs sm:text-sm">PRODUCTO</th>
+                                <th class="text-right py-4 sm:py-6 px-4 sm:px-8 font-medium text-zinc-400 text-xs sm:text-sm">CANTIDAD</th>
+                                <th class="text-right py-4 sm:py-6 px-4 sm:px-8 font-medium text-zinc-400 text-xs sm:text-sm">PRECIO</th>
+                                <th class="text-right py-4 sm:py-6 px-4 sm:px-8 font-medium text-zinc-400 text-xs sm:text-sm">TOTAL</th>
+                                <th class="w-16 sm:w-20"></th>
                             </tr>
                         </thead>
                         <tbody id="tabla-movimientos" class="divide-y divide-zinc-800"></tbody>
@@ -164,65 +197,65 @@
 
             <!-- TAB ESTADÍSTICAS -->
             <div id="tab-estadisticas" class="hidden">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div class="stat-card bg-zinc-900 border border-emerald-500/30 rounded-3xl p-6">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center">
-                                <i class="fa-solid fa-arrow-trend-up text-3xl text-emerald-400"></i>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                    <div class="stat-card bg-zinc-900 border border-emerald-500/30 rounded-3xl p-5 sm:p-6">
+                        <div class="flex items-center gap-3 sm:gap-4">
+                            <div class="w-11 h-11 sm:w-12 sm:h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-arrow-trend-up text-2xl sm:text-3xl text-emerald-400"></i>
                             </div>
                             <div>
-                                <p class="text-emerald-400 text-xs font-medium tracking-widest">INGRESOS POR VENTAS</p>
-                                <p id="stat-ventas" class="text-4xl font-bold text-emerald-400">$0.00</p>
+                                <p class="text-emerald-400 text-[10px] sm:text-xs font-medium tracking-widest">INGRESOS POR VENTAS</p>
+                                <p id="stat-ventas" class="text-2xl sm:text-4xl font-bold text-emerald-400">$0.00</p>
                             </div>
                         </div>
                     </div>
-                    <div class="stat-card bg-zinc-900 border border-blue-500/30 rounded-3xl p-6">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center">
-                                <i class="fa-solid fa-arrow-trend-down text-3xl text-blue-400"></i>
+                    <div class="stat-card bg-zinc-900 border border-blue-500/30 rounded-3xl p-5 sm:p-6">
+                        <div class="flex items-center gap-3 sm:gap-4">
+                            <div class="w-11 h-11 sm:w-12 sm:h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-arrow-trend-down text-2xl sm:text-3xl text-blue-400"></i>
                             </div>
                             <div>
-                                <p class="text-blue-400 text-xs font-medium tracking-widest">GASTOS EN COMPRAS</p>
-                                <p id="stat-compras" class="text-4xl font-bold text-blue-400">$0.00</p>
+                                <p class="text-blue-400 text-[10px] sm:text-xs font-medium tracking-widest">GASTOS EN COMPRAS</p>
+                                <p id="stat-compras" class="text-2xl sm:text-4xl font-bold text-blue-400">$0.00</p>
                             </div>
                         </div>
                     </div>
-                    <div class="stat-card bg-zinc-900 border border-yellow-500/30 rounded-3xl p-6">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-yellow-500/10 rounded-2xl flex items-center justify-center">
-                                <i class="fa-solid fa-wallet text-3xl text-yellow-400"></i>
+                    <div class="stat-card bg-zinc-900 border border-yellow-500/30 rounded-3xl p-5 sm:p-6">
+                        <div class="flex items-center gap-3 sm:gap-4">
+                            <div class="w-11 h-11 sm:w-12 sm:h-12 bg-yellow-500/10 rounded-2xl flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-wallet text-2xl sm:text-3xl text-yellow-400"></i>
                             </div>
                             <div>
-                                <p class="text-yellow-400 text-xs font-medium tracking-widest">GANANCIA BRUTA</p>
-                                <p id="stat-ganancia" class="text-4xl font-bold text-yellow-400">$0.00</p>
+                                <p class="text-yellow-400 text-[10px] sm:text-xs font-medium tracking-widest">GANANCIA BRUTA</p>
+                                <p id="stat-ganancia" class="text-2xl sm:text-4xl font-bold text-yellow-400">$0.00</p>
                             </div>
                         </div>
                     </div>
-                    <div class="stat-card bg-zinc-900 border border-zinc-400/30 rounded-3xl p-6">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-zinc-400/10 rounded-2xl flex items-center justify-center">
-                                <i class="fa-solid fa-boxes-stacked text-3xl text-zinc-400"></i>
+                    <div class="stat-card bg-zinc-900 border border-zinc-400/30 rounded-3xl p-5 sm:p-6">
+                        <div class="flex items-center gap-3 sm:gap-4">
+                            <div class="w-11 h-11 sm:w-12 sm:h-12 bg-zinc-400/10 rounded-2xl flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-boxes-stacked text-2xl sm:text-3xl text-zinc-400"></i>
                             </div>
                             <div>
-                                <p class="text-zinc-400 text-xs font-medium tracking-widest">VALOR DEL INVENTARIO</p>
-                                <p id="stat-inventario" class="text-4xl font-bold text-white">$0.00</p>
+                                <p class="text-zinc-400 text-[10px] sm:text-xs font-medium tracking-widest">VALOR DEL INVENTARIO</p>
+                                <p id="stat-inventario" class="text-2xl sm:text-4xl font-bold text-white">$0.00</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-10">
+                <div class="mt-8 sm:mt-10">
                     <div class="flex items-center gap-3 mb-4">
-                        <i class="fa-solid fa-trophy text-3xl text-yellow-400"></i>
-                        <h3 class="text-2xl font-semibold">PRODUCTOS MÁS VENDIDOS</h3>
+                        <i class="fa-solid fa-trophy text-2xl sm:text-3xl text-yellow-400"></i>
+                        <h3 class="text-xl sm:text-2xl font-semibold">PRODUCTOS MÁS VENDIDOS</h3>
                     </div>
-                    <div id="top-vendidos" class="bg-zinc-900 border border-zinc-700 rounded-3xl p-8 text-center text-zinc-400 min-h-[120px]">
+                    <div id="top-vendidos" class="bg-zinc-900 border border-zinc-700 rounded-3xl p-6 sm:p-8 text-center text-zinc-400 min-h-[120px]">
                         Aún no hay ventas registradas
                     </div>
                 </div>
 
-                <div class="flex justify-end mt-8">
-                    <button onclick="exportarMovimientosExcel()" class="bg-emerald-600 hover:bg-emerald-500 px-8 py-4 rounded-3xl font-medium flex items-center gap-3">
+                <div class="flex justify-end mt-6 sm:mt-8">
+                    <button onclick="exportarMovimientosExcel()" class="bg-emerald-600 hover:bg-emerald-500 px-6 sm:px-8 py-3 sm:py-4 rounded-3xl font-medium flex items-center gap-3 text-sm sm:text-base">
                         <i class="fa-solid fa-file-excel"></i>
                         Exportar Movimientos a Excel
                     </button>
@@ -232,21 +265,21 @@
     </div>
 
     <!-- MODAL PRODUCTO -->
-    <div id="modal-producto" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-        <div class="modal bg-zinc-900 rounded-3xl w-full max-w-lg mx-4 border border-zinc-700 shadow-2xl">
-            <div class="px-8 pt-8 pb-6 border-b border-zinc-800 flex items-center justify-between">
-                <h3 id="modal-producto-titulo" class="text-2xl font-semibold text-yellow-400">Nuevo Producto</h3>
+    <div id="modal-producto" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 px-4">
+        <div class="modal bg-zinc-900 rounded-3xl w-full max-w-lg border border-zinc-700 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div class="px-6 sm:px-8 pt-6 sm:pt-8 pb-5 sm:pb-6 border-b border-zinc-800 flex items-center justify-between">
+                <h3 id="modal-producto-titulo" class="text-xl sm:text-2xl font-semibold text-yellow-400">Nuevo Producto</h3>
                 <button onclick="cerrarModalProducto()" class="text-3xl leading-none text-zinc-400 hover:text-white">×</button>
             </div>
-            <div class="p-8 space-y-6">
-                <div class="grid grid-cols-2 gap-6">
+            <div class="p-6 sm:p-8 space-y-5 sm:space-y-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div>
                         <label class="text-xs font-medium text-zinc-400 block mb-2">NOMBRE / DESCRIPCIÓN</label>
-                        <input id="nombre" type="text" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500">
+                        <input id="nombre" type="text" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-4 sm:px-5 py-3 sm:py-4 focus:outline-none focus:border-yellow-500 text-white">
                     </div>
                     <div>
                         <label class="text-xs font-medium text-zinc-400 block mb-2">CATEGORÍA</label>
-                        <select id="categoria" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500">
+                        <select id="categoria" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-4 sm:px-5 py-3 sm:py-4 focus:outline-none focus:border-yellow-500 text-white">
                             <option value="Llantas">Llantas</option>
                             <option value="Rines">Rines</option>
                             <option value="Accesorios">Accesorios</option>
@@ -257,62 +290,62 @@
                         </select>
                     </div>
                 </div>
-                <div class="grid grid-cols-3 gap-6">
+                <div class="grid grid-cols-3 gap-3 sm:gap-6">
                     <div>
                         <label class="text-xs font-medium text-zinc-400 block mb-2">CANTIDAD</label>
-                        <input id="cantidad" type="number" min="0" value="1" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500">
+                        <input id="cantidad" type="number" min="0" value="1" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-3 sm:px-5 py-3 sm:py-4 focus:outline-none focus:border-yellow-500 text-white">
                     </div>
                     <div>
-                        <label class="text-xs font-medium text-zinc-400 block mb-2">PRECIO UNITARIO</label>
-                        <input id="precio" type="number" step="0.01" value="0" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500">
+                        <label class="text-xs font-medium text-zinc-400 block mb-2">PRECIO</label>
+                        <input id="precio" type="number" step="0.01" value="0" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-3 sm:px-5 py-3 sm:py-4 focus:outline-none focus:border-yellow-500 text-white">
                     </div>
                     <div>
-                        <label class="text-xs font-medium text-zinc-400 block mb-2">TAMAÑO (opcional)</label>
-                        <input id="tamano" type="text" placeholder="205/55 R16" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500">
+                        <label class="text-xs font-medium text-zinc-400 block mb-2">TAMAÑO</label>
+                        <input id="tamano" type="text" placeholder="205/55 R16" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-3 sm:px-5 py-3 sm:py-4 focus:outline-none focus:border-yellow-500 text-white">
                     </div>
                 </div>
             </div>
-            <div class="p-8 bg-zinc-950 rounded-b-3xl flex gap-4">
-                <button onclick="cerrarModalProducto()" class="flex-1 py-5 bg-zinc-800 hover:bg-zinc-700 rounded-2xl font-medium transition">CANCELAR</button>
-                <button onclick="guardarProducto()" class="flex-1 py-5 bg-yellow-500 hover:bg-yellow-400 text-zinc-900 font-semibold rounded-2xl transition">GUARDAR PRODUCTO</button>
+            <div class="p-6 sm:p-8 bg-zinc-950 rounded-b-3xl flex gap-4">
+                <button onclick="cerrarModalProducto()" class="flex-1 py-4 sm:py-5 bg-zinc-800 hover:bg-zinc-700 rounded-2xl font-medium transition text-sm sm:text-base">CANCELAR</button>
+                <button onclick="guardarProducto()" class="flex-1 py-4 sm:py-5 bg-yellow-500 hover:bg-yellow-400 text-zinc-900 font-semibold rounded-2xl transition text-sm sm:text-base">GUARDAR</button>
             </div>
         </div>
     </div>
 
     <!-- MODAL MOVIMIENTO -->
-    <div id="modal-movimiento" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-        <div class="modal bg-zinc-900 rounded-3xl w-full max-w-lg mx-4 border border-zinc-700 shadow-2xl">
-            <div class="px-8 pt-8 pb-6 border-b border-zinc-800 flex items-center justify-between">
-                <h3 class="text-2xl font-semibold text-yellow-400">Nuevo Movimiento</h3>
+    <div id="modal-movimiento" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 px-4">
+        <div class="modal bg-zinc-900 rounded-3xl w-full max-w-lg border border-zinc-700 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div class="px-6 sm:px-8 pt-6 sm:pt-8 pb-5 sm:pb-6 border-b border-zinc-800 flex items-center justify-between">
+                <h3 class="text-xl sm:text-2xl font-semibold text-yellow-400">Nuevo Movimiento</h3>
                 <button onclick="cerrarModalMovimiento()" class="text-3xl leading-none text-zinc-400 hover:text-white">×</button>
             </div>
-            <div class="p-8 space-y-6">
+            <div class="p-6 sm:p-8 space-y-5 sm:space-y-6">
                 <div class="flex gap-4">
-                    <button onclick="seleccionarTipo('venta')" id="btn-venta" class="flex-1 py-4 rounded-2xl border-2 border-emerald-500 text-emerald-400 font-semibold">VENTA</button>
-                    <button onclick="seleccionarTipo('compra')" id="btn-compra" class="flex-1 py-4 rounded-2xl border-2 border-blue-500 text-blue-400 font-semibold">COMPRA</button>
+                    <button onclick="seleccionarTipo('venta')" id="btn-venta" class="flex-1 py-3 sm:py-4 rounded-2xl border-2 border-emerald-500 text-emerald-400 font-semibold text-sm sm:text-base">VENTA</button>
+                    <button onclick="seleccionarTipo('compra')" id="btn-compra" class="flex-1 py-3 sm:py-4 rounded-2xl border-2 border-blue-500 text-blue-400 font-semibold text-sm sm:text-base">COMPRA</button>
                 </div>
                 <div>
                     <label class="text-xs font-medium text-zinc-400 block mb-2">Producto</label>
-                    <select id="producto-select" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500"></select>
+                    <select id="producto-select" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-4 sm:px-5 py-3 sm:py-4 focus:outline-none focus:border-yellow-500 text-white"></select>
                 </div>
-                <div class="grid grid-cols-2 gap-6">
+                <div class="grid grid-cols-2 gap-4 sm:gap-6">
                     <div>
                         <label class="text-xs font-medium text-zinc-400 block mb-2">Cantidad</label>
-                        <input id="mov-cantidad" type="number" min="1" value="1" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500">
+                        <input id="mov-cantidad" type="number" min="1" value="1" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-4 sm:px-5 py-3 sm:py-4 focus:outline-none focus:border-yellow-500 text-white">
                     </div>
                     <div>
                         <label id="label-precio" class="text-xs font-medium text-zinc-400 block mb-2">Precio de Venta</label>
-                        <input id="mov-precio" type="number" step="0.01" value="0" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500">
+                        <input id="mov-precio" type="number" step="0.01" value="0" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-4 sm:px-5 py-3 sm:py-4 focus:outline-none focus:border-yellow-500 text-white">
                     </div>
                 </div>
                 <div>
                     <label class="text-xs font-medium text-zinc-400 block mb-2">Fecha</label>
-                    <input id="mov-fecha" type="date" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-500">
+                    <input id="mov-fecha" type="date" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-4 sm:px-5 py-3 sm:py-4 focus:outline-none focus:border-yellow-500 text-white">
                 </div>
             </div>
-            <div class="p-8 bg-zinc-950 rounded-b-3xl flex gap-4">
-                <button onclick="cerrarModalMovimiento()" class="flex-1 py-5 bg-zinc-800 hover:bg-zinc-700 rounded-2xl font-medium transition">CANCELAR</button>
-                <button onclick="guardarMovimiento()" class="flex-1 py-5 bg-yellow-500 hover:bg-yellow-400 text-zinc-900 font-semibold rounded-2xl transition">GUARDAR MOVIMIENTO</button>
+            <div class="p-6 sm:p-8 bg-zinc-950 rounded-b-3xl flex gap-4">
+                <button onclick="cerrarModalMovimiento()" class="flex-1 py-4 sm:py-5 bg-zinc-800 hover:bg-zinc-700 rounded-2xl font-medium transition text-sm sm:text-base">CANCELAR</button>
+                <button onclick="guardarMovimiento()" class="flex-1 py-4 sm:py-5 bg-yellow-500 hover:bg-yellow-400 text-zinc-900 font-semibold rounded-2xl transition text-sm sm:text-base">GUARDAR</button>
             </div>
         </div>
     </div>
@@ -376,14 +409,14 @@
                 const fila = document.createElement('tr');
                 fila.className = item.cantidad < 5 ? 'stock-bajo' : '';
                 fila.innerHTML = `
-                    <td class="py-6 px-8 font-mono text-yellow-400">#${String(item.id).padStart(3,'0')}</td>
-                    <td class="py-6 px-8">${item.nombre}</td>
-                    <td class="py-6 px-8">${item.categoria}</td>
-                    <td class="py-6 px-8 text-right">${item.cantidad} unidades</td>
-                    <td class="py-6 px-8 text-right">$${item.precio.toFixed(2)}</td>
-                    <td class="py-6 px-8 text-right font-bold">$${valor.toFixed(2)}</td>
-                    <td class="py-6 px-8">
-                        <button onclick="editarProducto(${item.id})" class="text-amber-400 mr-4"><i class="fa-solid fa-pen"></i></button>
+                    <td class="py-4 sm:py-6 px-4 sm:px-8 font-mono text-yellow-400 text-sm">#${String(item.id).padStart(3,'0')}</td>
+                    <td class="py-4 sm:py-6 px-4 sm:px-8 text-sm">${item.nombre}</td>
+                    <td class="py-4 sm:py-6 px-4 sm:px-8 text-sm">${item.categoria}</td>
+                    <td class="py-4 sm:py-6 px-4 sm:px-8 text-right text-sm">${item.cantidad} uds</td>
+                    <td class="py-4 sm:py-6 px-4 sm:px-8 text-right text-sm">$${item.precio.toFixed(2)}</td>
+                    <td class="py-4 sm:py-6 px-4 sm:px-8 text-right font-bold text-sm">$${valor.toFixed(2)}</td>
+                    <td class="py-4 sm:py-6 px-4 sm:px-8">
+                        <button onclick="editarProducto(${item.id})" class="text-amber-400 mr-3"><i class="fa-solid fa-pen"></i></button>
                         <button onclick="eliminarProducto(${item.id})" class="text-red-400"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 `;
@@ -401,14 +434,14 @@
                 const fila = document.createElement('tr');
                 fila.className = item.cantidad < 5 ? 'stock-bajo' : '';
                 fila.innerHTML = `
-                    <td class="py-6 px-8 font-mono text-yellow-400">#${String(item.id).padStart(3,'0')}</td>
-                    <td class="py-6 px-8">${item.nombre}</td>
-                    <td class="py-6 px-8">${item.categoria}</td>
-                    <td class="py-6 px-8 text-right">${item.cantidad} unidades</td>
-                    <td class="py-6 px-8 text-right">$${item.precio.toFixed(2)}</td>
-                    <td class="py-6 px-8 text-right font-bold">$${valor.toFixed(2)}</td>
-                    <td class="py-6 px-8">
-                        <button onclick="editarProducto(${item.id})" class="text-amber-400 mr-4"><i class="fa-solid fa-pen"></i></button>
+                    <td class="py-4 sm:py-6 px-4 sm:px-8 font-mono text-yellow-400 text-sm">#${String(item.id).padStart(3,'0')}</td>
+                    <td class="py-4 sm:py-6 px-4 sm:px-8 text-sm">${item.nombre}</td>
+                    <td class="py-4 sm:py-6 px-4 sm:px-8 text-sm">${item.categoria}</td>
+                    <td class="py-4 sm:py-6 px-4 sm:px-8 text-right text-sm">${item.cantidad} uds</td>
+                    <td class="py-4 sm:py-6 px-4 sm:px-8 text-right text-sm">$${item.precio.toFixed(2)}</td>
+                    <td class="py-4 sm:py-6 px-4 sm:px-8 text-right font-bold text-sm">$${valor.toFixed(2)}</td>
+                    <td class="py-4 sm:py-6 px-4 sm:px-8">
+                        <button onclick="editarProducto(${item.id})" class="text-amber-400 mr-3"><i class="fa-solid fa-pen"></i></button>
                         <button onclick="eliminarProducto(${item.id})" class="text-red-400"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 `;
@@ -549,13 +582,13 @@
             sorted.forEach(m => {
                 const fila = document.createElement('tr');
                 fila.innerHTML = `
-                    <td class="py-6 px-8">${m.fecha}</td>
-                    <td class="py-6 px-8"><span class="px-4 py-1 rounded-3xl ${m.tipo==='venta'?'bg-emerald-900 text-emerald-300':'bg-blue-900 text-blue-300'}">${m.tipo.toUpperCase()}</span></td>
-                    <td class="py-6 px-8">${m.nombre}</td>
-                    <td class="py-6 px-8 text-right">${m.cantidad} unidades</td>
-                    <td class="py-6 px-8 text-right">$${m.precio.toFixed(2)}</td>
-                    <td class="py-6 px-8 text-right font-bold">$${m.total.toFixed(2)}</td>
-                    <td class="py-6 px-8">
+                    <td class="py-4 sm:py-6 px-4 sm:px-8 text-sm">${m.fecha}</td>
+                    <td class="py-4 sm:py-6 px-4 sm:px-8"><span class="px-3 py-1 rounded-3xl text-xs sm:text-sm ${m.tipo==='venta'?'bg-emerald-900 text-emerald-300':'bg-blue-900 text-blue-300'}">${m.tipo.toUpperCase()}</span></td>
+                    <td class="py-4 sm:py-6 px-4 sm:px-8 text-sm">${m.nombre}</td>
+                    <td class="py-4 sm:py-6 px-4 sm:px-8 text-right text-sm">${m.cantidad} uds</td>
+                    <td class="py-4 sm:py-6 px-4 sm:px-8 text-right text-sm">$${m.precio.toFixed(2)}</td>
+                    <td class="py-4 sm:py-6 px-4 sm:px-8 text-right font-bold text-sm">$${m.total.toFixed(2)}</td>
+                    <td class="py-4 sm:py-6 px-4 sm:px-8">
                         <button onclick="eliminarMovimiento(${m.id})" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 `;
@@ -599,7 +632,7 @@
             const sorted = Object.entries(top).sort((a,b) => b[1] - a[1]).slice(0,5);
             let html = sorted.length ? '' : 'Aún no hay ventas registradas';
             sorted.forEach(([nombre, cant]) => {
-                html += `<div class="flex justify-between py-3 border-b border-zinc-700 last:border-none"><span>${nombre}</span><span class="text-emerald-400">${cant} unidades</span></div>`;
+                html += `<div class="flex justify-between py-3 border-b border-zinc-700 last:border-none text-sm"><span>${nombre}</span><span class="text-emerald-400">${cant} unidades</span></div>`;
             });
             document.getElementById('top-vendidos').innerHTML = html || 'Aún no hay ventas registradas';
         }

@@ -35,14 +35,45 @@
             box-shadow: 0 10px 15px -3px rgb(234 179 8 / 0.4);
         }
 
-        /* ── RESPONSIVE: tabla con scroll horizontal en móvil ── */
-        .table-wrapper {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
+        /* ── RESPONSIVE: ocultar tabla y mostrar tarjetas en móvil ── */
+        @media (max-width: 767px) {
+            .tabla-desktop { display: none; }
+            .cards-mobile { display: block; }
         }
-        .table-wrapper table {
-            min-width: 640px;
+        @media (min-width: 768px) {
+            .tabla-desktop { display: block; }
+            .cards-mobile { display: none; }
         }
+        /* Tarjetas móvil */
+        .card-item {
+            background: #18181b;
+            border: 1px solid #3f3f46;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        .card-item.stock-bajo {
+            background-color: #fee2e2;
+            border-color: #fca5a5;
+            color: #b91c1c;
+        }
+        .card-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.2rem 0;
+        }
+        .card-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #71717a;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .card-item.stock-bajo .card-label { color: #b91c1c; }
+        .card-value { font-size: 0.85rem; text-align: right; }
+        .card-nombre { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .card-actions { display: flex; gap: 0.75rem; margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px solid #3f3f46; justify-content: flex-end; }
 
         /* ── RESPONSIVE: pestañas en móvil ── */
         @media (max-width: 640px) {
@@ -157,7 +188,10 @@
                         </button>
                     </div>
                 </div>
-                <div class="bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800 table-wrapper">
+                <!-- Tarjetas móvil -->
+                <div id="cards-inventario" class="cards-mobile"></div>
+                <!-- Tabla tablet/PC -->
+                <div class="tabla-desktop bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800">
                     <table class="w-full">
                         <thead>
                             <tr class="border-b border-zinc-800 bg-zinc-950">
@@ -177,7 +211,10 @@
 
             <!-- TAB MOVIMIENTOS -->
             <div id="tab-movimientos" class="hidden">
-                <div class="bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800 table-wrapper">
+                <!-- Tarjetas móvil -->
+                <div id="cards-movimientos" class="cards-mobile"></div>
+                <!-- Tabla tablet/PC -->
+                <div class="tabla-desktop bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800">
                     <table class="w-full">
                         <thead>
                             <tr class="border-b border-zinc-800 bg-zinc-950">
@@ -401,13 +438,20 @@
             if (tab === 2) { document.getElementById('tab-estadisticas').classList.remove('hidden'); calcularEstadisticas(); }
         }
 
-        function renderizarTabla() {
+        function renderizarTabla(lista) {
+            const items = lista || inventario;
+            // Tabla desktop
             const tbody = document.getElementById('tabla-inventario');
             tbody.innerHTML = '';
-            inventario.forEach(item => {
+            // Tarjetas móvil
+            const cards = document.getElementById('cards-inventario');
+            cards.innerHTML = '';
+            items.forEach(item => {
                 const valor = item.cantidad * item.precio;
+                const bajStock = item.cantidad < 5;
+                // Fila tabla
                 const fila = document.createElement('tr');
-                fila.className = item.cantidad < 5 ? 'stock-bajo' : '';
+                fila.className = bajStock ? 'stock-bajo' : '';
                 fila.innerHTML = `
                     <td class="py-4 sm:py-6 px-4 sm:px-8 font-mono text-yellow-400 text-sm">#${String(item.id).padStart(3,'0')}</td>
                     <td class="py-4 sm:py-6 px-4 sm:px-8 text-sm">${item.nombre}</td>
@@ -421,32 +465,29 @@
                     </td>
                 `;
                 tbody.appendChild(fila);
+                // Tarjeta móvil
+                const card = document.createElement('div');
+                card.className = 'card-item' + (bajStock ? ' stock-bajo' : '');
+                card.innerHTML = `
+                    <div class="card-nombre">${item.nombre}</div>
+                    <div class="card-row"><span class="card-label">ID</span><span class="card-value font-mono" style="color:#eab308">#${String(item.id).padStart(3,'0')}</span></div>
+                    <div class="card-row"><span class="card-label">Categoría</span><span class="card-value">${item.categoria}</span></div>
+                    <div class="card-row"><span class="card-label">Cantidad</span><span class="card-value">${item.cantidad} uds</span></div>
+                    <div class="card-row"><span class="card-label">Precio unitario</span><span class="card-value">$${item.precio.toFixed(2)}</span></div>
+                    <div class="card-row"><span class="card-label">Valor total</span><span class="card-value font-bold">$${valor.toFixed(2)}</span></div>
+                    <div class="card-actions">
+                        <button onclick="editarProducto(${item.id})" style="color:#fbbf24;font-size:1rem;padding:0.4rem 0.8rem;border-radius:0.5rem;background:#27272a;border:none;cursor:pointer;"><i class="fa-solid fa-pen"></i> Editar</button>
+                        <button onclick="eliminarProducto(${item.id})" style="color:#f87171;font-size:1rem;padding:0.4rem 0.8rem;border-radius:0.5rem;background:#27272a;border:none;cursor:pointer;"><i class="fa-solid fa-trash"></i> Eliminar</button>
+                    </div>
+                `;
+                cards.appendChild(card);
             });
         }
 
         function filtrarTabla() {
             const term = document.getElementById('buscador').value.toLowerCase().trim();
             const filtrados = inventario.filter(p => p.nombre.toLowerCase().includes(term));
-            const tbody = document.getElementById('tabla-inventario');
-            tbody.innerHTML = '';
-            filtrados.forEach(item => {
-                const valor = item.cantidad * item.precio;
-                const fila = document.createElement('tr');
-                fila.className = item.cantidad < 5 ? 'stock-bajo' : '';
-                fila.innerHTML = `
-                    <td class="py-4 sm:py-6 px-4 sm:px-8 font-mono text-yellow-400 text-sm">#${String(item.id).padStart(3,'0')}</td>
-                    <td class="py-4 sm:py-6 px-4 sm:px-8 text-sm">${item.nombre}</td>
-                    <td class="py-4 sm:py-6 px-4 sm:px-8 text-sm">${item.categoria}</td>
-                    <td class="py-4 sm:py-6 px-4 sm:px-8 text-right text-sm">${item.cantidad} uds</td>
-                    <td class="py-4 sm:py-6 px-4 sm:px-8 text-right text-sm">$${item.precio.toFixed(2)}</td>
-                    <td class="py-4 sm:py-6 px-4 sm:px-8 text-right font-bold text-sm">$${valor.toFixed(2)}</td>
-                    <td class="py-4 sm:py-6 px-4 sm:px-8">
-                        <button onclick="editarProducto(${item.id})" class="text-amber-400 mr-3"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="eliminarProducto(${item.id})" class="text-red-400"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(fila);
-            });
+            renderizarTabla(filtrados);
         }
 
         function abrirModalAgregar() {
@@ -578,12 +619,16 @@
         function renderizarMovimientos() {
             const tbody = document.getElementById('tabla-movimientos');
             tbody.innerHTML = '';
+            const cards = document.getElementById('cards-movimientos');
+            cards.innerHTML = '';
             const sorted = [...movimientos].sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
             sorted.forEach(m => {
+                const esVenta = m.tipo === 'venta';
+                // Fila tabla
                 const fila = document.createElement('tr');
                 fila.innerHTML = `
                     <td class="py-4 sm:py-6 px-4 sm:px-8 text-sm">${m.fecha}</td>
-                    <td class="py-4 sm:py-6 px-4 sm:px-8"><span class="px-3 py-1 rounded-3xl text-xs sm:text-sm ${m.tipo==='venta'?'bg-emerald-900 text-emerald-300':'bg-blue-900 text-blue-300'}">${m.tipo.toUpperCase()}</span></td>
+                    <td class="py-4 sm:py-6 px-4 sm:px-8"><span class="px-3 py-1 rounded-3xl text-xs sm:text-sm ${esVenta?'bg-emerald-900 text-emerald-300':'bg-blue-900 text-blue-300'}">${m.tipo.toUpperCase()}</span></td>
                     <td class="py-4 sm:py-6 px-4 sm:px-8 text-sm">${m.nombre}</td>
                     <td class="py-4 sm:py-6 px-4 sm:px-8 text-right text-sm">${m.cantidad} uds</td>
                     <td class="py-4 sm:py-6 px-4 sm:px-8 text-right text-sm">$${m.precio.toFixed(2)}</td>
@@ -593,6 +638,23 @@
                     </td>
                 `;
                 tbody.appendChild(fila);
+                // Tarjeta móvil
+                const card = document.createElement('div');
+                card.className = 'card-item';
+                card.innerHTML = `
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+                        <span class="card-nombre" style="margin-bottom:0">${m.nombre}</span>
+                        <span style="padding:0.2rem 0.75rem;border-radius:9999px;font-size:0.7rem;font-weight:700;${esVenta?'background:#064e3b;color:#6ee7b7':'background:#1e3a5f;color:#93c5fd'}">${m.tipo.toUpperCase()}</span>
+                    </div>
+                    <div class="card-row"><span class="card-label">Fecha</span><span class="card-value">${m.fecha}</span></div>
+                    <div class="card-row"><span class="card-label">Cantidad</span><span class="card-value">${m.cantidad} uds</span></div>
+                    <div class="card-row"><span class="card-label">Precio</span><span class="card-value">$${m.precio.toFixed(2)}</span></div>
+                    <div class="card-row"><span class="card-label">Total</span><span class="card-value font-bold">$${m.total.toFixed(2)}</span></div>
+                    <div class="card-actions">
+                        <button onclick="eliminarMovimiento(${m.id})" style="color:#f87171;font-size:1rem;padding:0.4rem 0.8rem;border-radius:0.5rem;background:#27272a;border:none;cursor:pointer;"><i class="fa-solid fa-trash"></i> Eliminar</button>
+                    </div>
+                `;
+                cards.appendChild(card);
             });
         }
 
